@@ -22,7 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.
+
 
 public class MainActivity extends Activity implements SensorEventListener,
 		OnClickListener {
@@ -90,18 +90,20 @@ public class MainActivity extends Activity implements SensorEventListener,
 			double y = event.values[1];
 			double z = event.values[2];
 			long timestamp = System.currentTimeMillis();
-			AccelData data = new AccelData(timestamp, x, y, z);
+            AccelData data = new AccelData(timestamp, x, y, z,"");
             if(radbtnIdle.isChecked())
-            {
+            {   data.setLabel("Idle");
                 sensorDataIdle.add(data);
             }
             if(radbtnWalking.isChecked())
             {
+                data.setLabel("Walking");
                 sensorDataWalking.add(data);
             }
             if (radbtnRunning.isChecked())
             {
-               sensorDataRunning.add(data);
+                data.setLabel("Running");
+                sensorDataRunning.add(data);
             }
 
 

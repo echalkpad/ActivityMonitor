@@ -2,18 +2,20 @@ package com.smartapps.accel;
 
 public class AccelData {
 	private long timestamp;
+    private String label;
 	private double x;
 	private double y;
 	private double z;
-	
-	
-	
-	public AccelData(long timestamp, double x, double y, double z) {
-		this.timestamp = timestamp;
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
+
+
+
+    public AccelData(long timestamp, double x, double y, double z, String label) {
+        this.timestamp = timestamp;
+        this.label = label;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
 	public long getTimestamp() {
 		return timestamp;
 	}
@@ -38,6 +40,8 @@ public class AccelData {
 	public void setZ(double z) {
 		this.z = z;
 	}
+    public String getLabel() {return label;}
+    public void setLabel(String label) {this.label= label;}
 	
 	public String toString()
 	{
