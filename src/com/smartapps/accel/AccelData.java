@@ -1,7 +1,7 @@
 package com.smartapps.accel;
 
 import javax.vecmath.Point3d;
-
+import java.util.ArrayList;
 
 
 public class AccelData {
@@ -11,7 +11,7 @@ public class AccelData {
 	private double y;
 	private double z;
     private Point3d point3d;
-
+    public ArrayList<Neighbour> neighbours;
 
 
     public AccelData(long timestamp, Point3d point3d, String label) {
@@ -21,7 +21,7 @@ public class AccelData {
         this.y = y;
         this.z = z;
         this.point3d = point3d;
-
+       // this.neighbours = neighbours;
     }
 	public long getTimestamp() {
 		return timestamp;
@@ -50,7 +50,14 @@ public class AccelData {
     public String getLabel() {return label;}
     public void setLabel(String label) {this.label= label;}
     public Point3d getPoint3D() {return point3d;}
-    public void setPoint3D(Point3d point3d) {this.point3d= point3d;}
+    // getters and setters
+    public void setNeighbours(ArrayList<Neighbour> neighbours) {
+        this.neighbours = neighbours;
+    }
+    public ArrayList<Neighbour> getNeighbours() {
+        return neighbours;
+    }
+
 	
 	public String toString()
 	{

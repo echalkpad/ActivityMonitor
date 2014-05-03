@@ -88,7 +88,9 @@ public class MainActivity extends Activity implements SensorEventListener,
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		if (started) {
-			double x = event.values[0];
+
+
+            double x = event.values[0];
 			double y = event.values[1];
 			double z = event.values[2];
             Point3d acelPoint = new Point3d();
@@ -156,13 +158,14 @@ public class MainActivity extends Activity implements SensorEventListener,
 		}
 
 	}
-    private void ClassifyData()
-    {
+    // This function checks the sample data against the test data.
+    private void ClassifyData(ArrayList<AccelData> sampledata, ArrayList<AccelData> testdata)    {
 
-        double distance = 0.0;
-        for (AccelData data : sensorDataIdle) {
+        int min = Math.min(sampledata.size(), testdata.size());
+        for(int i = 0; i<min; i++) {
+            double distance = sampledata.get(i).getPoint3D().distance(testdata.get(i).getPoint3D());
+            sampledata.get(i).neighbours.add(new Neighbour(testdata.get(i), distance));
 
-                            data.getPoint3D();
         }
 
     }
