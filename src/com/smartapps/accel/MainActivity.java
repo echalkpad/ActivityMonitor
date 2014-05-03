@@ -1,6 +1,7 @@
 package com.smartapps.accel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.widget.RadioButton;
 import org.achartengine.ChartFactory;
@@ -144,9 +145,6 @@ public class MainActivity extends Activity implements SensorEventListener,
 			started = false;
 			sensorManager.unregisterListener(this);
 			layout.removeAllViews();
-			//openChart();
-
-			// show data in chart
 			break;
             case R.id.btnTest:
                // btnTest.setEnabled(false);
@@ -165,81 +163,23 @@ public class MainActivity extends Activity implements SensorEventListener,
         for(int i = 0; i<min; i++) {
             double distance = sampledata.get(i).getPoint3D().distance(testdata.get(i).getPoint3D());
             sampledata.get(i).neighbours.add(new Neighbour(testdata.get(i), distance));
+        }
+        // Sort the List
+         Sort(sampledata);
+    }
+    private void Sort(List<AccelData> thelist)    {
+
+        for(int i = 0; i < thelist.size(); i++)	{// for all objects
+            AccelData obj = thelist.get(i);
+            for(int x = 0; x < obj.neighbours.size() - 1; x++)
+                for(int y = x + 1; y < obj.neighbours.size(); y++)
+                    if(obj.neighbours.get(x).getDistance() > obj.neighbours.get(y).getDistance()) {
+                        Neighbour aux = obj.neighbours.get(x);
+                        obj.neighbours.set(x,obj.neighbours.get(y));
+                        obj.neighbours.set(y,aux);
+                    }
 
         }
-
     }
-	/*private void openChart() {
-		if (sensorData != null || sensorData.size() > 0) {
-			long t = sensorData.get(0).getTimestamp();
-			XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-
-			XYSeries xSeries = new XYSeries("X");
-			XYSeries ySeries = new XYSeries("Y");
-			XYSeries zSeries = new XYSeries("Z");
-
-			for (AccelData data : sensorData) {
-				xSeries.add(data.getTimestamp() - t, data.getX());
-				ySeries.add(data.getTimestamp() - t, data.getY());
-				zSeries.add(data.getTimestamp() - t, data.getZ());
-			}
-
-			dataset.addSeries(xSeries);
-			dataset.addSeries(ySeries);
-			dataset.addSeries(zSeries);
-
-			XYSeriesRenderer xRenderer = new XYSeriesRenderer();
-			xRenderer.setColor(Color.RED);
-			xRenderer.setPointStyle(PointStyle.CIRCLE);
-			xRenderer.setFillPoints(true);
-			xRenderer.setLineWidth(1);
-			xRenderer.setDisplayChartValues(false);
-
-			XYSeriesRenderer yRenderer = new XYSeriesRenderer();
-			yRenderer.setColor(Color.GREEN);
-			yRenderer.setPointStyle(PointStyle.CIRCLE);
-			yRenderer.setFillPoints(true);
-			yRenderer.setLineWidth(1);
-			yRenderer.setDisplayChartValues(false);
-
-			XYSeriesRenderer zRenderer = new XYSeriesRenderer();
-			zRenderer.setColor(Color.BLUE);
-			zRenderer.setPointStyle(PointStyle.CIRCLE);
-			zRenderer.setFillPoints(true);
-			zRenderer.setLineWidth(1);
-			zRenderer.setDisplayChartValues(false);
-
-			XYMultipleSeriesRenderer multiRenderer = new XYMultipleSeriesRenderer();
-			multiRenderer.setXLabels(0);
-			multiRenderer.setLabelsColor(Color.RED);
-			multiRenderer.setChartTitle("t vs (x,y,z)");
-			multiRenderer.setXTitle("Sensor Data");
-			multiRenderer.setYTitle("Values of Acceleration");
-			multiRenderer.setZoomButtonsVisible(true);
-			for (int i = 0; i < sensorData.size(); i++) {
-				
-				multiRenderer.addXTextLabel(i + 1, ""
-						+ (sensorData.get(i).getTimestamp() - t));
-			}
-			for (int i = 0; i < 12; i++) {
-				multiRenderer.addYTextLabel(i + 1, ""+i);
-			}
-
-			multiRenderer.addSeriesRenderer(xRenderer);
-			multiRenderer.addSeriesRenderer(yRenderer);
-			multiRenderer.addSeriesRenderer(zRenderer);
-
-			// Getting a reference to LinearLayout of the MainActivity Layout
-			
-
-			// Creating a Line Chart
-			mChart = ChartFactory.getLineChartView(getBaseContext(), dataset,
-					multiRenderer);
-
-			// Adding the Line Chart to the LinearLayout
-			layout.addView(mChart);
-
-		}
-	}*/
 
 }
