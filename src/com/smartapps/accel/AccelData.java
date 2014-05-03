@@ -1,20 +1,27 @@
 package com.smartapps.accel;
 
+import javax.vecmath.Point3d;
+
+
+
 public class AccelData {
 	private long timestamp;
     private String label;
 	private double x;
 	private double y;
 	private double z;
+    private Point3d point3d;
 
 
 
-    public AccelData(long timestamp, double x, double y, double z, String label) {
+    public AccelData(long timestamp, Point3d point3d, String label) {
         this.timestamp = timestamp;
         this.label = label;
         this.x = x;
         this.y = y;
         this.z = z;
+        this.point3d = point3d;
+
     }
 	public long getTimestamp() {
 		return timestamp;
@@ -42,10 +49,12 @@ public class AccelData {
 	}
     public String getLabel() {return label;}
     public void setLabel(String label) {this.label= label;}
+    public Point3d getPoint3D() {return point3d;}
+    public void setPoint3D(Point3d point3d) {this.point3d= point3d;}
 	
 	public String toString()
 	{
-		return "t="+timestamp+", x="+x+", y="+y+", z="+z;
+		return "t="+timestamp+", x="+point3d.getX()+", y="+point3d.getY()+", z="+point3d.getZ();
 	}
 	
 

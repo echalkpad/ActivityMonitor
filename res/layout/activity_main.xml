@@ -9,19 +9,13 @@
         android:orientation="horizontal"
         android:id="@+id/buttons" >
 
-        <Button
-            android:id="@+id/btnStart"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Start" />
-
-        <Button
-            android:id="@+id/btnStop"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Stop" />
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Training"
+                android:id="@+id/textView" android:layout_weight="0.82" android:textAlignment="center"
+                android:layout_marginLeft="150dp"/>
 
     </LinearLayout>
 
@@ -35,21 +29,49 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Walking"
-            android:id="@+id/radbtnwalking" android:layout_below="@+id/chart_container"
-            android:layout_toRightOf="@+id/chart_container" android:layout_marginTop="72dp"/>
+            android:id="@+id/radbtnwalking"
+            android:layout_below="@+id/btnStop" android:layout_alignLeft="@+id/radbutrunning"/>
     <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Running"
             android:id="@+id/radbutrunning"
             android:singleLine="true"
-            android:layout_toRightOf="@+id/radbtnwalking" android:layout_alignTop="@+id/radbtnwalking"/>
+            android:layout_below="@+id/radbtnwalking" android:layout_centerHorizontal="true"/>
     <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Idle"
             android:id="@+id/radbotIdle"
-            android:layout_alignTop="@+id/radbutrunning"
-            android:layout_toRightOf="@+id/radbutrunning"/>
+            android:layout_below="@+id/radbutrunning" android:layout_centerHorizontal="true"/>
+    <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Test Data"
+            android:id="@+id/btnTest"
+            android:layout_below="@+id/textView2" android:layout_alignParentRight="true"/>
+    <Button
+        android:id="@+id/btnStart"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Start"
+        android:layout_below="@+id/chart_container" android:layout_toLeftOf="@+id/radbotIdle"
+        android:layout_toRightOf="@+id/chart_container"/>
+    <Button
+        android:id="@+id/btnStop"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Stop"
+        android:layout_alignTop="@+id/btnStart" android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/radbutrunning"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Testing"
+            android:id="@+id/textView2"
+            android:layout_centerVertical="true" android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

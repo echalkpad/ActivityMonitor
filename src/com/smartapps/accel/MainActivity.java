@@ -23,11 +23,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import javax.vecmath.Point3d;
+
 
 public class MainActivity extends Activity implements SensorEventListener,
 		OnClickListener {
 	private SensorManager sensorManager;
-	private Button btnStart, btnStop;
+	private Button btnStart, btnStop, btnTest;
     private RadioButton radbtnWalking, radbtnIdle, radbtnRunning;
 	private boolean started = false;
 	private ArrayList<AccelData> sensorDataWalking;
@@ -49,7 +51,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 
 		btnStart = (Button) findViewById(R.id.btnStart);
 		btnStop = (Button) findViewById(R.id.btnStop);
-
+        btnTest = (Button) findViewById(R.id.btnTest);
 
         radbtnIdle = (RadioButton) findViewById(R.id.radbotIdle);
         radbtnWalking =(RadioButton) findViewById(R.id.radbtnwalking);
@@ -89,8 +91,12 @@ public class MainActivity extends Activity implements SensorEventListener,
 			double x = event.values[0];
 			double y = event.values[1];
 			double z = event.values[2];
+            Point3d acelPoint = new Point3d();
+            acelPoint.setX(x);
+            acelPoint.setY(y);
+            acelPoint.setZ(z);
 			long timestamp = System.currentTimeMillis();
-            AccelData data = new AccelData(timestamp, x, y, z,"");
+            AccelData data = new AccelData(timestamp,acelPoint,"");
             if(radbtnIdle.isChecked())
             {   data.setLabel("Idle");
                 sensorDataIdle.add(data);
@@ -140,13 +146,26 @@ public class MainActivity extends Activity implements SensorEventListener,
 
 			// show data in chart
 			break;
+            case R.id.btnTest:
+               // btnTest.setEnabled(false);
+
+                break;
 
 		default:
 			break;
 		}
 
 	}
+    private void ClassifyData()
+    {
 
+        double distance = 0.0;
+        for (AccelData data : sensorDataIdle) {
+
+                            data.getPoint3D();
+        }
+
+    }
 	/*private void openChart() {
 		if (sensorData != null || sensorData.size() > 0) {
 			long t = sensorData.get(0).getTimestamp();
