@@ -29,27 +29,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Walking"
-            android:onClick="onRadioButtonClick"
             android:id="@+id/radbtnwalking"
-            android:layout_below="@+id/btnStop"
-            android:layout_alignLeft="@+id/radbutrunning"/>
+            android:layout_below="@+id/btnStop" android:layout_alignLeft="@+id/radbutrunning"/>
     <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Running"
             android:id="@+id/radbutrunning"
             android:singleLine="true"
-            android:onClick="onRadioButtonClick"
-            android:layout_below="@+id/radbtnwalking"
-            android:layout_centerHorizontal="true"/>
+            android:layout_below="@+id/radbtnwalking" android:layout_centerHorizontal="true"/>
     <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Idle"
             android:id="@+id/radbotIdle"
-            android:onClick="onRadioButtonClick"
-            android:layout_below="@+id/radbutrunning"
-            android:layout_centerHorizontal="true"/>
+            android:layout_below="@+id/radbutrunning" android:layout_centerHorizontal="true"/>
     <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
