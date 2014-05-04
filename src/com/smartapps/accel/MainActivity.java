@@ -11,6 +11,7 @@ import org.achartengine.model.XYSeries;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
+import android.util.Log;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -119,6 +120,32 @@ public class MainActivity extends Activity implements SensorEventListener,
 		}
 
 	}
+
+
+    public void onRadioButtonClick(View view) {
+        System.out.println();
+        Log.e("RadioButtonClick", "One radio button was clicked");
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+        switch (view.getId()) {
+            case R.id.radbotIdle:
+                Log.d("IdleChecked", "Idle was clicked!!!!!!!!!!!!!");
+                radbtnWalking.setChecked(false);
+                radbtnRunning.setChecked(false);
+                break;
+            case R.id.radbtnwalking:
+                Log.d("WalkChecked", "Walk was clicked!!!!!!!!!!!!!");
+                radbtnIdle.setChecked(false);
+                radbtnRunning.setChecked(false);
+                break;
+            case R.id.radbutrunning:
+                Log.d("RunChecked", "Run was clicked!!!!!!!!!!!!!");
+                radbtnIdle.setChecked(false);
+                radbtnWalking.setChecked(false);
+                break;
+        }
+    }
+
 
 	@Override
 	public void onClick(View v) {
