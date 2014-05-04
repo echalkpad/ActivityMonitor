@@ -1,10 +1,13 @@
 package com.smartapps.accel;
 
+import android.os.Parcelable;
+
 import javax.vecmath.Point3d;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class AccelData {
+public class AccelData implements Serializable{
 	private long timestamp;
     private String label;
 	private double x;

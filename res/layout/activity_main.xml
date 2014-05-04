@@ -30,26 +30,30 @@
             android:layout_height="wrap_content"
             android:text="Walking"
             android:id="@+id/radbtnwalking"
-            android:layout_below="@+id/btnStop" android:layout_alignLeft="@+id/radbutrunning"/>
+            android:layout_below="@+id/btnStop" android:layout_alignLeft="@+id/radbutrunning"
+            android:onClick="onRadioButtonClick"/>
     <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Running"
             android:id="@+id/radbutrunning"
             android:singleLine="true"
-            android:layout_below="@+id/radbtnwalking" android:layout_centerHorizontal="true"/>
+            android:layout_below="@+id/radbtnwalking" android:layout_centerHorizontal="true"
+            android:onClick="onRadioButtonClick"/>
     <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Idle"
             android:id="@+id/radbotIdle"
-            android:layout_below="@+id/radbutrunning" android:layout_centerHorizontal="true"/>
+            android:layout_below="@+id/radbutrunning" android:layout_centerHorizontal="true"
+            android:onClick="onRadioButtonClick"/>
     <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Test Data"
+            android:text="Classify Test"
             android:id="@+id/btnTest"
-            android:layout_below="@+id/textView2" android:layout_alignParentRight="true"/>
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="70dp" android:layout_centerVertical="true"/>
     <Button
         android:id="@+id/btnStart"
         android:layout_width="0dp"
@@ -66,12 +70,5 @@
         android:text="Stop"
         android:layout_alignTop="@+id/btnStart" android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/radbutrunning"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Testing"
-            android:id="@+id/textView2"
-            android:layout_centerVertical="true" android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>
