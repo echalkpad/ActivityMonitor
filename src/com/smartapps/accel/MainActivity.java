@@ -3,6 +3,8 @@ package com.smartapps.accel;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.widget.RadioButton;
 import org.achartengine.ChartFactory;
 import org.achartengine.chart.PointStyle;
@@ -73,6 +75,17 @@ public class MainActivity extends Activity implements SensorEventListener,
 
         timeToSave = 0;
 	}
+    public void switchContent(Fragment fragment)
+    {
+        if(fragment instanceof TestFragment){
+            setContentView(R.layout.test_fragment);
+            FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+            transaction.replace(R.id.content_frame,fragment);
+            transaction.commit();
+
+        }
+
+    }
 
 	@Override
 	protected void onResume() {
@@ -176,10 +189,11 @@ public class MainActivity extends Activity implements SensorEventListener,
 			layout.removeAllViews();
 			break;
         case R.id.btnTest:
-            // btnTest.setEnabled(false);
-            for(int i= 0; i < this.trainingData.size(); i++){
+            TestFragment tf = new TestFragment();
+            switchContent(tf);
+            /*for(int i= 0; i < this.trainingData.size(); i++){
                     System.out.println("DATA " + i + "\n" + trainingData.get(i).toString());
-            }
+            }*/
             break;
 		default:
 			break;
