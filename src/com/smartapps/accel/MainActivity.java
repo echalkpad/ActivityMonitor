@@ -241,6 +241,10 @@ public class MainActivity extends Activity implements SensorEventListener,
         sensorManager.unregisterListener(this);
     }
 
+    public ArrayList<AccelData> getSensorData()
+    {
+        return this.trainingData;
+    }
 
 
 }

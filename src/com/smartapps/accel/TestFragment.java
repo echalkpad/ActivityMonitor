@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import java.util.ArrayList;
+
 /**
  * Created by admin on 5/4/14.
  */
@@ -16,12 +18,13 @@ public class TestFragment extends Fragment implements View.OnClickListener{
     private Button btnStartTest, btnStopTest;
     private SensorManager sensorManager;
     private boolean started;
-
+    private ArrayList<AccelData> trainingData;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final MainActivity act =(MainActivity) getActivity();
+        trainingData = act.getSensorData();
         View v =  inflater.inflate(R.layout.test_fragment, container, false);
 
         started = false;
@@ -42,7 +45,9 @@ public class TestFragment extends Fragment implements View.OnClickListener{
             case R.id.btnStartTest:
                 btnStartTest.setEnabled(false);
                 btnStopTest.setEnabled(true);
-
+                  for(int i= 0; i < this.trainingData.size(); i++){
+                    System.out.println("DATA " + i + "\n" + trainingData.get(i).toString());
+                  }
                 // save prev data if available
                 started = true;
                 ((MainActivity)getActivity()).startSensor();
