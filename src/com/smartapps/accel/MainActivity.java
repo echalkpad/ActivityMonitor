@@ -37,7 +37,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 	private ArrayList<AccelData> sensorDataWalking;
     private ArrayList<AccelData> sensorDataRunning;
     private ArrayList<AccelData> sensorDataIdle;
-   // private ConfusionMatix  confusionMatrix;
+   // private ConfusionMatrix  confusionMatrix;
 	private LinearLayout layout;
 	private View mChart;
 
@@ -100,19 +100,19 @@ public class MainActivity extends Activity implements SensorEventListener,
             acelPoint.setY(y);
             acelPoint.setZ(z);
 			long timestamp = System.currentTimeMillis();
-            AccelData data = new AccelData(timestamp,acelPoint,"");
+            AccelData data = new AccelData(timestamp,acelPoint);
             if(radbtnIdle.isChecked())
-            {   data.setLabel("Idle");
+            {   data.setPointState(AccelData.State.Idle);
                 sensorDataIdle.add(data);
             }
             if(radbtnWalking.isChecked())
             {
-                data.setLabel("Walking");
+                data.setPointState(AccelData.State.Walk);
                 sensorDataWalking.add(data);
             }
             if (radbtnRunning.isChecked())
             {
-                data.setLabel("Running");
+                data.setPointState(AccelData.State.Run);
                 sensorDataRunning.add(data);
             }
 
