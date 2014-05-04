@@ -1,6 +1,8 @@
 package com.smartapps.accel;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.app.Fragment;
@@ -47,6 +49,7 @@ public class MainActivity extends Activity implements SensorEventListener,
     private Sensor accel;
 
     private int timeToSave;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -193,8 +196,12 @@ public class MainActivity extends Activity implements SensorEventListener,
 			layout.removeAllViews();
 			break;
         case R.id.btnTest:
+            this.classifyData(this.trainingData, this.trainingData);
+
             TestFragment tf = new TestFragment();
             switchContent(tf);
+
+
             /*for(int i= 0; i < this.trainingData.size(); i++){
                     System.out.println("DATA " + i + "\n" + trainingData.get(i).toString());
             }*/
@@ -205,16 +212,72 @@ public class MainActivity extends Activity implements SensorEventListener,
 
 	}
     // This function checks the sample data against the test data.
-    private void ClassifyData(ArrayList<AccelData> sampledata, ArrayList<AccelData> testdata)    {
+    public void classifyData(ArrayList<AccelData> sampledata, ArrayList<AccelData> testdata)    {
 
-        int min = Math.min(sampledata.size(), testdata.size());
-        for(int i = 0; i<min; i++) {
-            double distance = sampledata.get(i).getPoint3D().distance(testdata.get(i).getPoint3D());
-            sampledata.get(i).neighbours.add(new Neighbour(testdata.get(i), distance));
+/*
+        testdata = new ArrayList<AccelData>();
+        testdata.add(new AccelData(System.currentTimeMillis(), new Point3d(1,1,1)));
+
+        sampledata = new ArrayList<AccelData>();
+        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(50,40,30), AccelData.State.Idle));
+        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(2,2,2), AccelData.State.Run));
+        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(45,65,10), AccelData.State.Idle));
+        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(8,5,2), AccelData.State.Walk));
+        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(10,20,20), AccelData.State.Walk));
+        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(3.5,7.5,4.5), AccelData.State.Run));
+        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(2,11,31), AccelData.State.Run));
+        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(1.5,1.5,1.5), AccelData.State.Idle));
+*/
+
+        ArrayList<Neighbour> neighbours = new ArrayList<Neighbour>();
+        for(int j = 0; j < testdata.size(); j++){
+            for (int i = 0; i < sampledata.size(); i++) {
+                double distance = sampledata.get(i).getPoint3D().distance(testdata.get(j).getPoint3D());
+                neighbours.add(new Neighbour(sampledata.get(i), distance));
+            }
+
+            Log.w("Test", "TARARARARARARATTATARARARARAR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+            //sort
+            Collections.sort(neighbours);
+            //add to j (testdata) the first 5 neighbours
+            ArrayList<Neighbour> temporary = new ArrayList<Neighbour>();
+            int nrRuns = 0, nrWalks = 0, nrIdle = 0;
+            for(int t = 0; t < 5; t++){
+
+                temporary.add(neighbours.get(t));
+                switch(neighbours.get(t).getNeighbour().getPointState()){
+                    case Idle:
+                        nrIdle++;
+                        break;
+                    case Run:
+                        nrRuns++;
+                        break;
+                    case Walk:
+                        nrWalks++;
+                        break;
+                    default:
+                        break;
+                }
+
+                System.out.println("Le voisin " + t + " " + neighbours.get(t).getDistance());
+            }
+            AccelData.State st;
+            if(nrRuns > nrIdle){
+                st = (nrRuns>nrWalks)? AccelData.State.Run : AccelData.State.Walk;
+            }else st = (nrIdle>nrWalks)?  AccelData.State.Idle : AccelData.State.Walk;
+            testdata.get(j).setPointState(st);
+            testdata.get(j).setNeighbours(temporary);
+
+            System.out.println("Le donnees " + testdata.get(j).getPointState().name());
+
+            neighbours = new ArrayList();
         }
-        // Sort the List
-         Sort(sampledata);
+
     }
+
+
+/*
     private void Sort(List<AccelData> thelist)    {
 
         for(int i = 0; i < thelist.size(); i++)	{// for all objects
@@ -230,6 +293,7 @@ public class MainActivity extends Activity implements SensorEventListener,
         }
     }
 
+*/
     public void startSensor(){
         started = true;
         this.accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);

@@ -1,9 +1,11 @@
 package com.smartapps.accel;
 
+import java.util.Comparator;
+
 /**
  * Created by admin on 5/3/14.
  */
-public class Neighbour {
+public class Neighbour implements Comparable<Neighbour>{
     private AccelData neighbour;
     private double distance;
 
@@ -26,5 +28,26 @@ public class Neighbour {
         this.neighbour = neighbour;
         this.distance = distance;
     }
+
+    public int compareTo(Neighbour n) {
+        if (this.distance < n.getDistance()) return -1;
+        if (this.distance > n.getDistance()) return 1;
+        return 0;
+    }
+
+
+    /**
+     * Beautiful comparator
+     */
+        public static Comparator<Neighbour> NeighbourNameComparator
+                = new Comparator<Neighbour>() {
+
+            public int compare(Neighbour n1, Neighbour n2) {
+                if(n1.getDistance() < n2.getDistance()) return -1;
+                if(n1.getDistance() > n2.getDistance()) return 1;
+                return 0;
+            }
+
+        };
 
 }
