@@ -34,6 +34,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 	private Button btnStart, btnStop, btnTest;
     private RadioButton radbtnWalking, radbtnIdle, radbtnRunning;
 	private boolean started = false;
+    private ArrayList<AccelData> trainingData;
 	private ArrayList<AccelData> sensorDataWalking;
     private ArrayList<AccelData> sensorDataRunning;
     private ArrayList<AccelData> sensorDataIdle;
@@ -41,12 +42,16 @@ public class MainActivity extends Activity implements SensorEventListener,
 	private LinearLayout layout;
 	private View mChart;
 
+    private int timeToSave;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		layout = (LinearLayout) findViewById(R.id.chart_container);
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        trainingData = new ArrayList<AccelData>();
 		sensorDataRunning = new ArrayList<AccelData>();
         sensorDataIdle = new ArrayList<AccelData>();
         sensorDataWalking = new ArrayList<AccelData>();
@@ -61,11 +66,12 @@ public class MainActivity extends Activity implements SensorEventListener,
 
 		btnStart.setOnClickListener(this);
 		btnStop.setOnClickListener(this);
+        btnTest.setOnClickListener(this);
 
 		btnStart.setEnabled(true);
 		btnStop.setEnabled(false);
 
-
+        timeToSave = 0;
 	}
 
 	@Override
@@ -91,7 +97,6 @@ public class MainActivity extends Activity implements SensorEventListener,
 	public void onSensorChanged(SensorEvent event) {
 		if (started) {
 
-
             double x = event.values[0];
 			double y = event.values[1];
 			double z = event.values[2];
@@ -100,23 +105,23 @@ public class MainActivity extends Activity implements SensorEventListener,
             acelPoint.setY(y);
             acelPoint.setZ(z);
 			long timestamp = System.currentTimeMillis();
-            AccelData data = new AccelData(timestamp,acelPoint);
-            if(radbtnIdle.isChecked())
-            {   data.setPointState(AccelData.State.Idle);
-                sensorDataIdle.add(data);
-            }
-            if(radbtnWalking.isChecked())
-            {
-                data.setPointState(AccelData.State.Walk);
-                sensorDataWalking.add(data);
-            }
-            if (radbtnRunning.isChecked())
-            {
-                data.setPointState(AccelData.State.Run);
-                sensorDataRunning.add(data);
-            }
 
+            timeToSave++;
+            if ((timeToSave % 8) == 0) {
 
+                AccelData data = new AccelData(timestamp, acelPoint);
+                if (radbtnIdle.isChecked()) {
+                    data.setPointState(AccelData.State.Idle);
+                }
+                if (radbtnWalking.isChecked()) {
+                    data.setPointState(AccelData.State.Walk);
+                }
+                if (radbtnRunning.isChecked()) {
+                    data.setPointState(AccelData.State.Run);
+                }
+                this.trainingData.add(data);
+
+            }
 		}
 
 	}
@@ -129,17 +134,17 @@ public class MainActivity extends Activity implements SensorEventListener,
         boolean checked = ((RadioButton) view).isChecked();
         switch (view.getId()) {
             case R.id.radbotIdle:
-                Log.d("IdleChecked", "Idle was clicked!!!!!!!!!!!!!");
+                Log.w("IdleChecked", "Idle was clicked!!!!!!!!!!!!!");
                 radbtnWalking.setChecked(false);
                 radbtnRunning.setChecked(false);
                 break;
             case R.id.radbtnwalking:
-                Log.d("WalkChecked", "Walk was clicked!!!!!!!!!!!!!");
+                Log.w("WalkChecked", "Walk was clicked!!!!!!!!!!!!!");
                 radbtnIdle.setChecked(false);
                 radbtnRunning.setChecked(false);
                 break;
             case R.id.radbutrunning:
-                Log.d("RunChecked", "Run was clicked!!!!!!!!!!!!!");
+                Log.w("RunChecked", "Run was clicked!!!!!!!!!!!!!");
                 radbtnIdle.setChecked(false);
                 radbtnWalking.setChecked(false);
                 break;
@@ -155,9 +160,6 @@ public class MainActivity extends Activity implements SensorEventListener,
 			btnStart.setEnabled(false);
 			btnStop.setEnabled(true);
 
-			sensorDataIdle = new ArrayList<AccelData>();
-            sensorDataWalking   = new ArrayList<AccelData>();
-            sensorDataRunning = new ArrayList<AccelData>();
 			// save prev data if available
 			started = true;
 			Sensor accel = sensorManager
@@ -173,11 +175,12 @@ public class MainActivity extends Activity implements SensorEventListener,
 			sensorManager.unregisterListener(this);
 			layout.removeAllViews();
 			break;
-            case R.id.btnTest:
-               // btnTest.setEnabled(false);
-
-                break;
-
+        case R.id.btnTest:
+            // btnTest.setEnabled(false);
+            for(int i= 0; i < this.trainingData.size(); i++){
+                    System.out.println("DATA " + i + "\n" + trainingData.get(i).toString());
+            }
+            break;
 		default:
 			break;
 		}

@@ -102,7 +102,7 @@ public class AccelData {
 	
 	public String toString()
 	{
-		return "t="+timestamp+", x="+point3d.getX()+", y="+point3d.getY()+", z="+point3d.getZ();
+		return "t="+timestamp+", x="+point3d.getX()+", y="+point3d.getY()+", z="+point3d.getZ() + " State is " + this.pointState.name();
 	}
 	
 
