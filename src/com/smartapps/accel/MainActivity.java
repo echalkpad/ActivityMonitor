@@ -44,6 +44,8 @@ public class MainActivity extends Activity implements SensorEventListener,
 	private LinearLayout layout;
 	private View mChart;
 
+    private Sensor accel;
+
     private int timeToSave;
 
 	@Override
@@ -52,6 +54,8 @@ public class MainActivity extends Activity implements SensorEventListener,
 		setContentView(R.layout.activity_main);
 		layout = (LinearLayout) findViewById(R.id.chart_container);
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         trainingData = new ArrayList<AccelData>();
 		sensorDataRunning = new ArrayList<AccelData>();
@@ -175,7 +179,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 
 			// save prev data if available
 			started = true;
-			Sensor accel = sensorManager
+			this.accel = sensorManager
 					.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 			sensorManager.registerListener(this, accel,
 					SensorManager.SENSOR_DELAY_FASTEST);
@@ -225,5 +229,18 @@ public class MainActivity extends Activity implements SensorEventListener,
 
         }
     }
+
+    public void startSensor(){
+        started = true;
+        this.accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this, accel,SensorManager.SENSOR_DELAY_FASTEST);
+    }
+
+    public void endSensor(){
+        started = false;
+        sensorManager.unregisterListener(this);
+    }
+
+
 
 }
