@@ -78,29 +78,30 @@ public class ResultsFragment   extends ListFragment {
             TextView idleValue = (TextView) convertView.findViewById(R.id.idle);
             int valueI = getItem(position).nrOfIdle;
             if(valueI % totalNrData == 0){
-                idleValue.setText(valueI / totalNrData);
+                idleValue.setText(Integer.toString(valueI / totalNrData));
             }else{
-                idleValue.setText(valueI + "/" + totalNrData);
+                idleValue.setText(Integer.toString(valueI) + "/" + Integer.toString(totalNrData));
             }
 
             TextView walkValue = (TextView) convertView.findViewById(R.id.walk);
             int valueW = getItem(position).nrOfWalks;
             if(valueW % totalNrData == 0){
-                walkValue.setText(valueW / totalNrData);
+                walkValue.setText(Integer.toString(valueW / totalNrData));
             }else{
-                walkValue.setText(valueW + "/" + totalNrData);
+                walkValue.setText(Integer.toString(valueW) + "/" + Integer.toString(totalNrData));
             }
 
             TextView runValue = (TextView) convertView.findViewById(R.id.run);
             int valueR = getItem(position).nrOfRuns;
             if(valueI % totalNrData == 0){
-                runValue.setText(valueR / totalNrData);
+                runValue.setText(Integer.toString(valueR / totalNrData));
             }else{
-                runValue.setText(valueR + "/" + totalNrData);
+                runValue.setText(Integer.toString(valueR) + "/" + Integer.toString(totalNrData));
             }
 
             return convertView;
         }
+
 
 
     }
