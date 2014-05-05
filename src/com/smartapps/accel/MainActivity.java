@@ -8,6 +8,7 @@ import java.util.List;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.widget.RadioButton;
+import android.widget.Toast;
 import org.achartengine.ChartFactory;
 import org.achartengine.chart.PointStyle;
 import org.achartengine.model.XYMultipleSeriesDataset;
@@ -38,12 +39,14 @@ public class MainActivity extends Activity implements SensorEventListener,
 	private Button btnStart, btnStop, btnTest;
     private RadioButton radbtnWalking, radbtnIdle, radbtnRunning;
 	private boolean started = false;
+    private boolean istesting = false;
     private ArrayList<AccelData> trainingData;
-	private ArrayList<AccelData> sensorDataWalking;
+	private ArrayList<AccelData> testingData;
     private ArrayList<AccelData> sensorDataRunning;
     private ArrayList<AccelData> sensorDataIdle;
    // private ConfusionMatrix  confusionMatrix;
-	private LinearLayout layout;
+   private final static String TAG_FRAGMENT = "TAG_FRAGMENT";
+
 	private View mChart;
 
     private Sensor accel;
@@ -55,15 +58,14 @@ public class MainActivity extends Activity implements SensorEventListener,
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		layout = (LinearLayout) findViewById(R.id.chart_container);
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         trainingData = new ArrayList<AccelData>();
-		sensorDataRunning = new ArrayList<AccelData>();
+        testingData = new ArrayList<AccelData>();
         sensorDataIdle = new ArrayList<AccelData>();
-        sensorDataWalking = new ArrayList<AccelData>();
+
 
 		btnStart = (Button) findViewById(R.id.btnStart);
 		btnStop = (Button) findViewById(R.id.btnStop);
@@ -81,17 +83,18 @@ public class MainActivity extends Activity implements SensorEventListener,
 		btnStop.setEnabled(false);
 
         timeToSave = 0;
+
 	}
     public void switchContent(Fragment fragment)
     {
         if(fragment instanceof TestFragment){
             setContentView(R.layout.test_fragment);
             FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
-            transaction.replace(R.id.content_frame,fragment);
+            transaction.replace(R.id.content_frame,fragment,TAG_FRAGMENT);
+            transaction.addToBackStack("TestFragment");
             transaction.commit();
 
         }
-
     }
 
 	@Override
@@ -115,7 +118,8 @@ public class MainActivity extends Activity implements SensorEventListener,
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		if (started) {
+	  if(!istesting){
+        if (started) {
 
             double x = event.values[0];
 			double y = event.values[1];
@@ -140,9 +144,32 @@ public class MainActivity extends Activity implements SensorEventListener,
                     data.setPointState(AccelData.State.Run);
                 }
                 this.trainingData.add(data);
-
+                System.out.println("In Training!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             }
 		}
+      }
+       else
+      {
+             // This part is for storing the testing data
+                  double x = event.values[0];
+                  double y = event.values[1];
+                  double z = event.values[2];
+                  Point3d acelPoint = new Point3d();
+                  acelPoint.setX(x);
+                  acelPoint.setY(y);
+                  acelPoint.setZ(z);
+                  long timestamp = System.currentTimeMillis();
+
+                  timeToSave++;
+                  if ((timeToSave % 8) == 0) {
+
+                      AccelData data = new AccelData(timestamp, acelPoint);
+
+                      this.testingData.add(data);
+                      System.out.println("In TESTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+          }
+
+      }
 
 	}
 
@@ -190,16 +217,24 @@ public class MainActivity extends Activity implements SensorEventListener,
 		case R.id.btnStop:
 			btnStart.setEnabled(true);
 			btnStop.setEnabled(false);
-
+            istesting =false;
 			started = false;
 			sensorManager.unregisterListener(this);
-			layout.removeAllViews();
+
 			break;
         case R.id.btnTest:
-            this.classifyData(this.trainingData, this.trainingData);
 
+            if(trainingData.size()>0)
+            {
+            istesting = true;
             TestFragment tf = new TestFragment();
             switchContent(tf);
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "No Training data found!!!",
+                        Toast.LENGTH_SHORT).show();
+            }
 
 
             /*for(int i= 0; i < this.trainingData.size(); i++){
@@ -305,10 +340,13 @@ public class MainActivity extends Activity implements SensorEventListener,
         sensorManager.unregisterListener(this);
     }
 
-    public ArrayList<AccelData> getSensorData()
+    public ArrayList<AccelData> getTrainingData()
     {
         return this.trainingData;
     }
-
+    public ArrayList<AccelData> getTestingData()
+    {
+        return this.testingData;
+    }
 
 }

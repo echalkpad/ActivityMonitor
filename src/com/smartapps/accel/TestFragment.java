@@ -1,9 +1,13 @@
 package com.smartapps.accel;
 
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +28,7 @@ public class TestFragment extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final MainActivity act =(MainActivity) getActivity();
-        trainingData = act.getSensorData();
+        trainingData = act.getTrainingData();
         View v =  inflater.inflate(R.layout.test_fragment, container, false);
 
         started = false;
@@ -35,8 +39,10 @@ public class TestFragment extends Fragment implements View.OnClickListener{
         btnStartTest.setOnClickListener(this);
         btnStopTest.setOnClickListener(this);
 
+
         return v;
     }
+
 
 
     @Override
@@ -45,7 +51,8 @@ public class TestFragment extends Fragment implements View.OnClickListener{
             case R.id.btnStartTest:
                 btnStartTest.setEnabled(false);
                 btnStopTest.setEnabled(true);
-                  for(int i= 0; i < this.trainingData.size(); i++){
+
+                 for(int i= 0; i < this.trainingData.size(); i++){
                     System.out.println("DATA " + i + "\n" + trainingData.get(i).toString());
                   }
                 // save prev data if available

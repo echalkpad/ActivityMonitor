@@ -19,12 +19,7 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/chart_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/buttons" >
-    </LinearLayout>
+
     <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,12 +53,12 @@
             android:layout_below="@+id/textView2" android:layout_alignParentRight="true"/>
     <Button
         android:id="@+id/btnStart"
-        android:layout_width="0dp"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Start"
-        android:layout_below="@+id/chart_container" android:layout_toLeftOf="@+id/radbotIdle"
-        android:layout_toRightOf="@+id/chart_container"/>
+        android:layout_below="@+id/chart_container"
+            />
     <Button
         android:id="@+id/btnStop"
         android:layout_width="0dp"
