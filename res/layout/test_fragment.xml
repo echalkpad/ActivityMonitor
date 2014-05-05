@@ -20,4 +20,12 @@
             android:layout_weight="0.04"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"/>
+
+    <Button
+            android:id="@+id/from_test_to_results"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="See Results"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
 </RelativeLayout>

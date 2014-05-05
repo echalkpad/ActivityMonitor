@@ -98,6 +98,12 @@ public class MainActivity extends Activity implements SensorEventListener,
             transaction.addToBackStack("TestFragment");
             transaction.commit();
 
+        }else if(fragment instanceof  ResultsFragment){
+            setContentView(R.layout.results_fragment);
+            FragmentTransaction transaction = this.getFragmentManager().beginTransaction();
+            transaction.replace(R.id.results_page,fragment, TAG_FRAGMENT);
+            transaction.addToBackStack("ResultsFragment");
+            transaction.commit();
         }
     }
 

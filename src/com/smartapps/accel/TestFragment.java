@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * Created by admin on 5/4/14.
  */
 public class TestFragment extends Fragment implements View.OnClickListener{
-    private Button btnStartTest, btnStopTest;
+    private Button btnStartTest, btnStopTest, btnGoToResults;
     private SensorManager sensorManager;
     private boolean started;
 
@@ -36,12 +36,23 @@ public class TestFragment extends Fragment implements View.OnClickListener{
 
         btnStartTest = (Button) v.findViewById(R.id.btnStartTest);
         btnStopTest = (Button) v.findViewById(R.id.btnStopTest);
+        btnGoToResults = (Button) v.findViewById(R.id.from_test_to_results);
 
         btnStartTest.setOnClickListener(this);
         btnStopTest.setOnClickListener(this);
+        btnGoToResults.setOnClickListener(this);
 
 
         return v;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        MainActivity activ = (MainActivity)getActivity();
+        activ.setTitle("Test");
+
     }
 
 
@@ -72,6 +83,9 @@ public class TestFragment extends Fragment implements View.OnClickListener{
                 //Third oh! Now we need to know which group of data this belongs...
                 activ.whereDoYouBelong();
                 break;
+            case R.id.from_test_to_results:
+                ResultsFragment frag = new ResultsFragment();
+                ((MainActivity)getActivity()).switchContent(frag);
             default:
                 break;
         }

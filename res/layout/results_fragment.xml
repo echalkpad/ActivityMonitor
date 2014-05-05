@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/results_page"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+    <RelativeLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="150dp">
+
+
+        <TextView
+                android:id="@+id/matrix_name"
+                style="@android:style/TextAppearance.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Confusion Matrix"
+                android:textSize="18sp"
+                android:layout_marginTop="60dp"
+                android:layout_centerHorizontal="true"/>
+
+
+        <TextView
+                android:id="@+id/idle"
+                style="@android:style/TextAppearance.Small"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:text="Idle"
+                android:background="#ffdee4dd"
+                android:layout_toLeftOf="@+id/walk"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/matrix_name"/>
+
+
+        <TextView
+                android:id="@+id/walk"
+                style="@android:style/TextAppearance.Small"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="Walk"
+                android:textSize="18sp"
+                android:background="#ffdee4dd"
+                android:layout_toLeftOf="@+id/run"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/matrix_name" />
+
+        <TextView
+                android:id="@+id/run"
+                style="@android:style/TextAppearance.Small"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="Run"
+                android:textSize="18sp"
+                android:background="#ffdee4dd"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/matrix_name"
+                android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+
+    <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/header" >
+    </ListView>
+</RelativeLayout>

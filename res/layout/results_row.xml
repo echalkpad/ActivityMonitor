@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/result_row"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <TextView
+            android:id="@+id/name"
+            style="@android:style/TextAppearance.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:background="#ff5289ec"
+            android:layout_marginLeft="20dp"
+            android:layout_toLeftOf="@id/idle"
+            android:layout_alignParentLeft="true" />
+
+
+    <TextView
+            android:id="@+id/idle"
+            style="@android:style/TextAppearance.Small"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:background="#ffec4946"
+            android:layout_toLeftOf="@+id/walk"/>
+
+
+    <TextView
+            android:id="@+id/walk"
+            style="@android:style/TextAppearance.Small"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:background="#ffec78ae"
+            android:layout_toLeftOf="@+id/run" />
+
+    <TextView
+            android:id="@+id/run"
+            style="@android:style/TextAppearance.Small"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:background="#ff5289ec"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"/>
+</RelativeLayout>
