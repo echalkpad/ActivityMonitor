@@ -41,9 +41,10 @@ public class MainActivity extends Activity implements SensorEventListener,
 	private boolean started = false;
     private boolean istesting = false;
     private ArrayList<AccelData> trainingData;
-	private ArrayList<AccelData> testingData;
-    private ArrayList<AccelData> sensorDataRunning;
-    private ArrayList<AccelData> sensorDataIdle;
+    private ArrayList<AccelData> testDataTemp;
+	private ArrayList<AccelData> testDataIdle;
+    private ArrayList<AccelData> testDataWalk;
+    private ArrayList<AccelData> testDataRun;
    // private ConfusionMatrix  confusionMatrix;
    private final static String TAG_FRAGMENT = "TAG_FRAGMENT";
 
@@ -60,11 +61,14 @@ public class MainActivity extends Activity implements SensorEventListener,
 		setContentView(R.layout.activity_main);
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
+        istesting = false;
         accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         trainingData = new ArrayList<AccelData>();
-        testingData = new ArrayList<AccelData>();
-        sensorDataIdle = new ArrayList<AccelData>();
+        testDataIdle = new ArrayList<AccelData>();
+        testDataWalk = new ArrayList<AccelData>();
+        testDataRun = new ArrayList<AccelData>();
+        testDataTemp = new ArrayList<AccelData>();
 
 
 		btnStart = (Button) findViewById(R.id.btnStart);
@@ -148,8 +152,7 @@ public class MainActivity extends Activity implements SensorEventListener,
             }
 		}
       }
-       else
-      {
+       else {
              // This part is for storing the testing data
                   double x = event.values[0];
                   double y = event.values[1];
@@ -162,15 +165,11 @@ public class MainActivity extends Activity implements SensorEventListener,
 
                   timeToSave++;
                   if ((timeToSave % 8) == 0) {
-
                       AccelData data = new AccelData(timestamp, acelPoint);
-
-                      this.testingData.add(data);
-                      System.out.println("In TESTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-          }
-
-      }
-
+                      this.testDataTemp.add(data);
+                      Log.w("Test","In TESTING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                  }
+       }
 	}
 
 
@@ -204,6 +203,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 		switch (v.getId()) {
 		case R.id.btnStart:
 
+            istesting =false;
 			btnStart.setEnabled(false);
 			btnStop.setEnabled(true);
 
@@ -224,11 +224,18 @@ public class MainActivity extends Activity implements SensorEventListener,
 			break;
         case R.id.btnTest:
 
+            /*
+            istesting = true;
+            TestFragment tf = new TestFragment();
+            switchContent(tf);
+           */
+
             if(trainingData.size()>0)
             {
             istesting = true;
             TestFragment tf = new TestFragment();
             switchContent(tf);
+
             }
             else
             {
@@ -249,20 +256,30 @@ public class MainActivity extends Activity implements SensorEventListener,
     // This function checks the sample data against the test data.
     public void classifyData(ArrayList<AccelData> sampledata, ArrayList<AccelData> testdata)    {
 
-/*
+
+        //DON'T FORGET TO TAKE THIS OUT!!!!!!!
+
         testdata = new ArrayList<AccelData>();
         testdata.add(new AccelData(System.currentTimeMillis(), new Point3d(1,1,1)));
+        testdata.add(new AccelData(System.currentTimeMillis(), new Point3d(2,1,1)));
+        testdata.add(new AccelData(System.currentTimeMillis(), new Point3d(1,2,1)));
+        testdata.add(new AccelData(System.currentTimeMillis(), new Point3d(1,1,2)));
 
         sampledata = new ArrayList<AccelData>();
         sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(50,40,30), AccelData.State.Idle));
-        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(2,2,2), AccelData.State.Run));
+        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(5,411,30), AccelData.State.Idle));
         sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(45,65,10), AccelData.State.Idle));
-        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(8,5,2), AccelData.State.Walk));
-        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(10,20,20), AccelData.State.Walk));
+        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(43,64,11), AccelData.State.Run));
+        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(20,21,23), AccelData.State.Run));
         sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(3.5,7.5,4.5), AccelData.State.Run));
         sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(2,11,31), AccelData.State.Run));
-        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(1.5,1.5,1.5), AccelData.State.Idle));
-*/
+        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(8,5,2), AccelData.State.Walk));
+        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(10,20,20), AccelData.State.Walk));
+
+        this.testDataTemp = testdata;
+        this.trainingData = sampledata;
+
+        //Don't forget ! Take that thing out............. fake data...
 
         ArrayList<Neighbour> neighbours = new ArrayList<Neighbour>();
         for(int j = 0; j < testdata.size(); j++){
@@ -312,6 +329,36 @@ public class MainActivity extends Activity implements SensorEventListener,
     }
 
 
+    public void whereDoYouBelong() {
+        int nrIdle = 0, nrRuns = 0, nrWalks = 0;
+        for (int i = 0; i < this.testDataTemp.size(); i++) {
+            switch (this.testDataTemp.get(i).getPointState()) {
+                case Idle:
+                    nrIdle++;
+                    break;
+                case Run:
+                    nrRuns++;
+                    break;
+                case Walk:
+                    nrWalks++;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        //Log.w("Test", "Nr of runs is " + nrRuns + " Nr of walks is " + nrWalks + " Nr of Idle is " + nrIdle);
+        if (nrRuns > nrIdle) {
+            if(nrRuns > nrWalks) {
+                testDataRun = new ArrayList<AccelData>(testDataTemp);
+            }else  testDataWalk = new ArrayList<AccelData>(testDataTemp);
+        } else {
+            if(nrIdle > nrWalks) {
+                testDataIdle = new ArrayList<AccelData>(testDataTemp);
+            }else testDataWalk = new ArrayList<AccelData>(testDataTemp);
+        }
+    }
+
 /*
     private void Sort(List<AccelData> thelist)    {
 
@@ -332,7 +379,7 @@ public class MainActivity extends Activity implements SensorEventListener,
     public void startSensor(){
         started = true;
         this.accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        sensorManager.registerListener(this, accel,SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     public void endSensor(){
@@ -344,9 +391,27 @@ public class MainActivity extends Activity implements SensorEventListener,
     {
         return this.trainingData;
     }
-    public ArrayList<AccelData> getTestingData()
+    public ArrayList<AccelData> getTestDataIdle()
     {
-        return this.testingData;
+        return this.testDataIdle;
+    }
+    public ArrayList<AccelData> getTestDataWalk()
+    {
+        return this.testDataWalk;
+    }
+    public ArrayList<AccelData> getTestDataRun()
+    {
+        return this.testDataRun;
+    }
+
+    public ArrayList<AccelData> getTestDataTemp()
+    {
+        return this.testDataTemp;
+    }
+
+    public void setTestDataTemp(ArrayList<AccelData> testData)
+    {
+        this.testDataTemp = testData;
     }
 
 }

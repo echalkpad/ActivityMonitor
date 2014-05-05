@@ -22,6 +22,7 @@ public class TestFragment extends Fragment implements View.OnClickListener{
     private Button btnStartTest, btnStopTest;
     private SensorManager sensorManager;
     private boolean started;
+
     private ArrayList<AccelData> trainingData;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,9 +53,7 @@ public class TestFragment extends Fragment implements View.OnClickListener{
                 btnStartTest.setEnabled(false);
                 btnStopTest.setEnabled(true);
 
-                 for(int i= 0; i < this.trainingData.size(); i++){
-                    System.out.println("DATA " + i + "\n" + trainingData.get(i).toString());
-                  }
+                ((MainActivity)getActivity()).setTestDataTemp(new ArrayList<AccelData>());
                 // save prev data if available
                 started = true;
                 ((MainActivity)getActivity()).startSensor();
@@ -63,9 +62,15 @@ public class TestFragment extends Fragment implements View.OnClickListener{
 
                 btnStartTest.setEnabled(true);
                 btnStopTest.setEnabled(false);
-
                 started = false;
-                ((MainActivity)getActivity()).endSensor();
+                MainActivity activ = ((MainActivity)getActivity());
+
+                //First stop accelerometer
+                activ.endSensor();
+                //Second KNN - let's classify this points :)
+                activ.classifyData(activ.getTrainingData(), activ.getTestDataTemp());
+                //Third oh! Now we need to know which group of data this belongs...
+                activ.whereDoYouBelong();
                 break;
             default:
                 break;
