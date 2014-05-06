@@ -91,9 +91,16 @@ public class MainActivity extends Activity implements SensorEventListener,
 		btnStart.setEnabled(true);
 		btnStop.setEnabled(false);
 
+        setTitle("Activity Monitoring");
+
         timeToSave = 0;
 
 	}
+
+
+
+
+
     public void switchContent(Fragment fragment)
     {
         if(fragment instanceof TestFragment){
@@ -146,7 +153,7 @@ public class MainActivity extends Activity implements SensorEventListener,
             timeToSave++;
 
             if(!istesting){
-                if ((timeToSave % 8) == 0) {
+                if ((timeToSave % 2) == 0) {
 
                     AccelData data = new AccelData(timestamp, acelPoint);
                     if (radbtnIdle.isChecked()) {
