@@ -26,19 +26,7 @@ public class ResultsFragment   extends ListFragment {
         View viewContainer = inflater.inflate(R.layout.results_fragment, container, false);
         MainActivity activ = (MainActivity)getActivity();
 
-
-         if(activ.getTestDataIdle().size()>0)
-         {
-             updateInformation(activ.getTestDataIdle());
-         }
-         else if(activ.getTestDataWalk().size()>0)
-         {
-             updateInformation(activ.getTestDataWalk());
-         }
-        else {
-             updateInformation(activ.getTestDataRun());
-         }
-
+        updateInformation();
 
         return viewContainer;
     }
@@ -53,13 +41,25 @@ public class ResultsFragment   extends ListFragment {
     }
 
 
-    public void updateInformation(ArrayList<AccelData> tableData){
+    public void updateInformation(){
         DataItemAdapter adapter = new DataItemAdapter(getActivity());
+        MainActivity activ = ((MainActivity) getActivity());
 
-        //EXAMPLE
-        adapter.add(new DataItem("Idle", 9, 0, 0, 9));
-        adapter.add(new DataItem("Walk", 1, 7, 1, 9));
-        adapter.add(new DataItem("Run", 1, 3, 5, 9));
+        GroupData dataIdle = activ.getTestDataIdle();
+        GroupData dataWalk = activ.getTestDataWalk();
+        GroupData dataRun = activ.getTestDataRun();
+        if(dataIdle.getData().size()>0)
+        {
+            adapter.add( new DataItem("Idle", dataIdle.getnrofIdle(),dataIdle.getnrofWalks(), dataIdle.getnrofRuns(), dataIdle.getData().size()));
+        }
+
+        if(dataWalk.getData().size()>0)
+        {
+            adapter.add( new DataItem("Walk", dataWalk.getnrofIdle(),dataWalk.getnrofWalks(), dataWalk.getnrofRuns(), dataWalk.getData().size()));
+        }
+        if(dataRun.getData().size()>0){
+            adapter.add( new DataItem("Walk", dataRun.getnrofIdle(),dataRun.getnrofWalks(), dataRun.getnrofRuns(), dataRun.getData().size()));
+        }
 
         setListAdapter(adapter);
     }
@@ -129,7 +129,7 @@ public class ResultsFragment   extends ListFragment {
         public int nrOfRuns;
         public int totalNrOfData;
 
-        public DataItem(String dataName, int nrOfWalks, int nrOfIdle, int nrOfRuns, int totalNrOfData) {
+        public DataItem(String dataName, int nrOfIdle,  int nrOfWalks, int nrOfRuns,  int totalNrOfData) {
             this.dataName = dataName;
             this.nrOfWalks = nrOfWalks;
             this.nrOfIdle = nrOfIdle;

@@ -42,9 +42,9 @@ public class MainActivity extends Activity implements SensorEventListener,
     private boolean istesting = false;
     private ArrayList<AccelData> trainingData;
     private ArrayList<AccelData> testDataTemp;
-	private ArrayList<AccelData> testDataIdle;
-    private ArrayList<AccelData> testDataWalk;
-    private ArrayList<AccelData> testDataRun;
+	private GroupData testDataIdle;
+    private GroupData testDataWalk;
+    private GroupData testDataRun;
    // private ConfusionMatrix  confusionMatrix;
    private final static String TAG_FRAGMENT = "TAG_FRAGMENT";
 
@@ -65,10 +65,10 @@ public class MainActivity extends Activity implements SensorEventListener,
         accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         trainingData = new ArrayList<AccelData>();
-        testDataIdle = new ArrayList<AccelData>();
-        testDataWalk = new ArrayList<AccelData>();
-        testDataRun = new ArrayList<AccelData>();
         testDataTemp = new ArrayList<AccelData>();
+        testDataIdle = new GroupData(new ArrayList<AccelData>());
+        testDataWalk = new GroupData(new ArrayList<AccelData>());
+        testDataRun = new GroupData(new ArrayList<AccelData>());
 
 
 		btnStart = (Button) findViewById(R.id.btnStart);
@@ -353,15 +353,19 @@ public class MainActivity extends Activity implements SensorEventListener,
             }
         }
 
+        GroupData temporary = new GroupData(new ArrayList<AccelData>(testDataTemp));
+        temporary.setnrOfIdle(nrIdle);
+        temporary.setnrOfWalks(nrWalks);
+        temporary.setnrOfRuns(nrRuns);
         //Log.w("Test", "Nr of runs is " + nrRuns + " Nr of walks is " + nrWalks + " Nr of Idle is " + nrIdle);
         if (nrRuns > nrIdle) {
             if(nrRuns > nrWalks) {
-                testDataRun = new ArrayList<AccelData>(testDataTemp);
-            }else  testDataWalk = new ArrayList<AccelData>(testDataTemp);
+                testDataRun = new GroupData(temporary);
+            }else  testDataWalk = new GroupData(temporary);
         } else {
             if(nrIdle > nrWalks) {
-                testDataIdle = new ArrayList<AccelData>(testDataTemp);
-            }else testDataWalk = new ArrayList<AccelData>(testDataTemp);
+                testDataIdle = new GroupData(temporary);
+            }else testDataWalk = new GroupData(temporary);
         }
     }
 
@@ -397,15 +401,15 @@ public class MainActivity extends Activity implements SensorEventListener,
     {
         return this.trainingData;
     }
-    public ArrayList<AccelData> getTestDataIdle()
+    public GroupData getTestDataIdle()
     {
         return this.testDataIdle;
     }
-    public ArrayList<AccelData> getTestDataWalk()
+    public GroupData getTestDataWalk()
     {
         return this.testDataWalk;
     }
-    public ArrayList<AccelData> getTestDataRun()
+    public GroupData getTestDataRun()
     {
         return this.testDataRun;
     }

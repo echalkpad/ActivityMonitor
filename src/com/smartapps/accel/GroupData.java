@@ -7,38 +7,52 @@ import java.util.ArrayList;
  */
 public class GroupData {
 
+    public static final int NR_INIT_QUANT = -1;
     private int nrOfWalks;
     private int nrOfIdle;
     private int nrOfRuns;
     private ArrayList<AccelData> testGroupData;
 
-    public GroupData(int nrOfWalks, int nrOfIdle, int nrOfRuns,ArrayList<AccelData> testGroupData) {
+    public GroupData(ArrayList<AccelData> testGroupData) {
 
-        this.nrOfWalks = nrOfWalks;
-        this.nrOfIdle = nrOfIdle;
-        this.nrOfRuns = nrOfRuns;
+        this.nrOfWalks = NR_INIT_QUANT;
+        this.nrOfIdle = NR_INIT_QUANT;
+        this.nrOfRuns = NR_INIT_QUANT;
         this.testGroupData = testGroupData;
     }
+    public GroupData(GroupData group) {
+        this.nrOfWalks = group.getnrofWalks();
+        this.nrOfIdle = group.getnrofIdle();
+        this.nrOfRuns = group.getnrofRuns();
+        this.testGroupData = group.getData();
+    }
     // Getters & Setters
-    public long getnrofWalks() {
+    public int getnrofWalks() {
         return this.nrOfWalks;
     }
     public void setnrOfWalks(int nrOfWalks) {
         this.nrOfWalks = nrOfWalks;
     }
 
-    public long getnrofIdle() {
+    public int getnrofIdle() {
         return this.nrOfIdle;
     }
     public void setnrOfIdle(int nrOfIdle) {
         this.nrOfIdle = nrOfIdle;
     }
 
-    public long getnrofRuns() {
+    public int getnrofRuns() {
         return this.nrOfRuns;
     }
     public void setnrOfRuns(int nrOfRuns) {
         this.nrOfRuns = nrOfRuns;
     }
 
+    public void setData(ArrayList<AccelData> testGroupData){
+        this.testGroupData = testGroupData;
+    }
+
+    public ArrayList<AccelData> getData(){
+        return this.testGroupData;
+    }
 }
