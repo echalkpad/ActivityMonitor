@@ -26,7 +26,19 @@ public class ResultsFragment   extends ListFragment {
         View viewContainer = inflater.inflate(R.layout.results_fragment, container, false);
         MainActivity activ = (MainActivity)getActivity();
 
-        updateInformation();
+
+         if(activ.getTestDataIdle().size()>0)
+         {
+             updateInformation(activ.getTestDataIdle());
+         }
+         else if(activ.getTestDataWalk().size()>0)
+         {
+             updateInformation(activ.getTestDataWalk());
+         }
+        else {
+             updateInformation(activ.getTestDataRun());
+         }
+
 
         return viewContainer;
     }
@@ -41,7 +53,7 @@ public class ResultsFragment   extends ListFragment {
     }
 
 
-    private void updateInformation(){
+    public void updateInformation(ArrayList<AccelData> tableData){
         DataItemAdapter adapter = new DataItemAdapter(getActivity());
 
         //EXAMPLE
