@@ -1,27 +1,29 @@
 package com.smartapps.accel;
 
 import android.app.Fragment;
-import android.content.DialogInterface;
-import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 /**
- * Created by admin on 5/4/14.
+ *
  */
 public class TestFragment extends Fragment implements View.OnClickListener{
+
+    private static final String MSG_NO_TEST = "You didn't perform a test. Please click button Start.";
+    private static final String MSG_TEST_NOT_FINISHED = "You're test is not complete. If you want to finish, please select stop.";
+    private static final String MSG_MORE_THAN_3_TESTS = "At least 3 tests were performed. If you start a new test, the data will be overwritten.";
+
     private Button btnStartTest, btnStopTest, btnGoToResults;
-    private SensorManager sensorManager;
+    private int nrOfTests;
     private boolean started;
+
 
     private ArrayList<AccelData> trainingData;
     @Override
@@ -32,6 +34,7 @@ public class TestFragment extends Fragment implements View.OnClickListener{
         trainingData = act.getTrainingData();
         View v =  inflater.inflate(R.layout.test_fragment, container, false);
 
+        nrOfTests = 0;
         started = false;
 
         btnStartTest = (Button) v.findViewById(R.id.btnStartTest);
@@ -59,22 +62,29 @@ public class TestFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
+
+        MainActivity activ = ((MainActivity) getActivity());
         switch (v.getId()) {
             case R.id.btnStartTest:
-                btnStartTest.setEnabled(false);
-                btnStopTest.setEnabled(true);
 
-                ((MainActivity)getActivity()).setTestDataTemp(new ArrayList<AccelData>());
-                // save prev data if available
-                started = true;
-                ((MainActivity)getActivity()).startSensor();
+                if(nrOfTests >= 3){
+                    Toast.makeText(activ.getApplicationContext(), MSG_MORE_THAN_3_TESTS,Toast.LENGTH_LONG).show();
+                }else {
+                    btnStartTest.setEnabled(false);
+                    btnStopTest.setEnabled(true);
+
+                    activ.setTestDataTemp(new ArrayList<AccelData>());
+                    // save prev data if available
+                    started = true;
+                    nrOfTests++;
+                    ((MainActivity) getActivity()).startSensor();
+                }
                 break;
             case R.id.btnStopTest:
 
                 btnStartTest.setEnabled(true);
                 btnStopTest.setEnabled(false);
                 started = false;
-                MainActivity activ = ((MainActivity)getActivity());
 
                 //First stop accelerometer
                 activ.endSensor();
@@ -84,8 +94,16 @@ public class TestFragment extends Fragment implements View.OnClickListener{
                 activ.whereDoYouBelong();
                 break;
             case R.id.from_test_to_results:
-                ResultsFragment frag = new ResultsFragment();
-                ((MainActivity)getActivity()).switchContent(frag);
+
+                if(started){
+                    Toast.makeText(activ.getApplicationContext(), MSG_TEST_NOT_FINISHED, Toast.LENGTH_LONG).show();
+                }else if(nrOfTests == 0){
+                    Toast.makeText(activ.getApplicationContext(), MSG_NO_TEST,Toast.LENGTH_LONG).show();
+                }else{
+                    activ.setNrOfTests(this.nrOfTests);
+                    ResultsFragment frag = new ResultsFragment();
+                    activ.switchContent(frag);
+                }
             default:
                 break;
         }

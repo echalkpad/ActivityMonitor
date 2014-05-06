@@ -14,7 +14,7 @@
             android:layout_height="50dp"
             android:gravity="center"
             android:paddingLeft="15dp"
-            android:background="#ff5289ec"
+            android:background="#ffc7c7c7"
             android:layout_marginLeft="20dp"
             android:layout_toLeftOf="@id/idle"
             android:layout_alignParentLeft="true" />
@@ -27,7 +27,7 @@
             android:layout_height="50dp"
             android:gravity="center"
             android:textSize="18sp"
-            android:background="#ffec4946"
+            android:background="#ffdee4dd"
             android:layout_toLeftOf="@+id/walk"/>
 
 
@@ -38,7 +38,7 @@
             android:layout_height="50dp"
             android:gravity="center"
             android:paddingLeft="15dp"
-            android:background="#ffec78ae"
+            android:background="#ffdee4dd"
             android:layout_toLeftOf="@+id/run" />
 
     <TextView
@@ -48,7 +48,7 @@
             android:layout_height="50dp"
             android:gravity="center"
             android:paddingLeft="15dp"
-            android:background="#ff5289ec"
+            android:background="#ffdee4dd"
             android:layout_marginRight="20dp"
             android:layout_alignParentRight="true"/>
 </RelativeLayout>

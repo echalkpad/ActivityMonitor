@@ -5,13 +5,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-//import android.app.ActionBar;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.content.Context;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 
 /**
  * Created by Maryanne on 05-05-2014.
@@ -24,7 +21,7 @@ public class ResultsFragment   extends ListFragment {
                              Bundle savedInstanceState) {
 
         View viewContainer = inflater.inflate(R.layout.results_fragment, container, false);
-        MainActivity activ = (MainActivity)getActivity();
+        //MainActivity activ = (MainActivity)getActivity();
 
         updateInformation();
 
@@ -58,7 +55,7 @@ public class ResultsFragment   extends ListFragment {
             adapter.add( new DataItem("Walk", dataWalk.getnrofIdle(),dataWalk.getnrofWalks(), dataWalk.getnrofRuns(), dataWalk.getData().size()));
         }
         if(dataRun.getData().size()>0){
-            adapter.add( new DataItem("Walk", dataRun.getnrofIdle(),dataRun.getnrofWalks(), dataRun.getnrofRuns(), dataRun.getData().size()));
+            adapter.add( new DataItem("Run", dataRun.getnrofIdle(),dataRun.getnrofWalks(), dataRun.getnrofRuns(), dataRun.getData().size()));
         }
 
         setListAdapter(adapter);

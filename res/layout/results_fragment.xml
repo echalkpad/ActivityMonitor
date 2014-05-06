@@ -32,7 +32,7 @@
                 android:gravity="center"
                 android:textSize="18sp"
                 android:text="Idle"
-                android:background="#ffdee4dd"
+                android:background="#ffc7c7c7"
                 android:layout_toLeftOf="@+id/walk"
                 android:layout_marginTop="16dp"
                 android:layout_below="@id/matrix_name"/>
@@ -46,7 +46,7 @@
                 android:gravity="center"
                 android:text="Walk"
                 android:textSize="18sp"
-                android:background="#ffdee4dd"
+                android:background="#ffc7c7c7"
                 android:layout_toLeftOf="@+id/run"
                 android:layout_marginTop="16dp"
                 android:layout_below="@id/matrix_name" />
@@ -59,7 +59,7 @@
                 android:gravity="center"
                 android:text="Run"
                 android:textSize="18sp"
-                android:background="#ffdee4dd"
+                android:background="#ffc7c7c7"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="16dp"
                 android:layout_below="@id/matrix_name"
@@ -72,6 +72,6 @@
             android:id="@android:id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/header" >
+            android:layout_below="@id/header" android:divider="#ffffff">
     </ListView>
 </RelativeLayout>
