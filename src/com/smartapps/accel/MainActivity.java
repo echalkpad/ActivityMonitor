@@ -5,8 +5,16 @@ import java.util.Collections;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.content.IntentFilter;
 
 
 import android.util.Log;
@@ -35,8 +43,10 @@ public class MainActivity extends Activity implements SensorEventListener,
     private static final String MSG_FINISH_ACTION = "You must first complete the action. Please press button STOP to finish it.";
 
 
+
 	private SensorManager sensorManager;
-	private Button btnStart, btnStop, btnTest;
+	private Button btnStart, btnStop, btnTest, btnCheckWifi;
+    private TextView txtview;
     private RadioButton radbtnWalking, radbtnIdle, radbtnRunning;
 	private boolean started = false;
     private boolean istesting = false;
@@ -45,6 +55,8 @@ public class MainActivity extends Activity implements SensorEventListener,
 	private GroupData testDataIdle;
     private GroupData testDataWalk;
     private GroupData testDataRun;
+
+    private ArrayList<RFData> fingerprintingData;
 
    private final static String TAG_FRAGMENT = "TAG_FRAGMENT";
 
@@ -74,11 +86,14 @@ public class MainActivity extends Activity implements SensorEventListener,
         testDataIdle = new GroupData(new ArrayList<AccelData>());
         testDataWalk = new GroupData(new ArrayList<AccelData>());
         testDataRun = new GroupData(new ArrayList<AccelData>());
+        fingerprintingData = new ArrayList<RFData>();
 
 
 		btnStart = (Button) findViewById(R.id.btnStart);
 		btnStop = (Button) findViewById(R.id.btnStop);
         btnTest = (Button) findViewById(R.id.btnTest);
+        btnCheckWifi = (Button) findViewById(R.id.btnCheckWifi);
+        txtview = (TextView) findViewById(R.id.txtview);
 
         radbtnIdle = (RadioButton) findViewById(R.id.radbotIdle);
         radbtnWalking =(RadioButton) findViewById(R.id.radbtnwalking);
@@ -87,6 +102,13 @@ public class MainActivity extends Activity implements SensorEventListener,
 		btnStart.setOnClickListener(this);
 		btnStop.setOnClickListener(this);
         btnTest.setOnClickListener(this);
+        btnCheckWifi.setOnClickListener(this);
+
+        this.registerReceiver(this.myWifiReceiver,
+                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
+        this.registerReceiver(this.myRssiChangeReceiver,
+                new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
 
 		btnStart.setEnabled(true);
 		btnStop.setEnabled(false);
@@ -96,7 +118,28 @@ public class MainActivity extends Activity implements SensorEventListener,
         timeToSave = 0;
 
 	}
+    private BroadcastReceiver myRssiChangeReceiver
+            = new BroadcastReceiver(){
 
+        @Override
+        public void onReceive(Context arg0, Intent arg1) {
+            // TODO Auto-generated method stub
+            int newRssi = arg1.getIntExtra(WifiManager.EXTRA_NEW_RSSI, 0);
+            txtview.setText(String.valueOf(newRssi));
+        }};
+
+    private BroadcastReceiver myWifiReceiver
+            = new BroadcastReceiver(){
+
+        @Override
+        public void onReceive(Context arg0, Intent arg1) {
+            // TODO Auto-generated method stub
+            ConnectivityManager myConnManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = myConnManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
+                DisplayWifiState();
+            }
+        }};
 
 
 
@@ -282,11 +325,43 @@ public class MainActivity extends Activity implements SensorEventListener,
 
             }
             break;
+            case R.id.btnCheckWifi:
+                // check Wifi (RSSI) Received Signal Strength
+
+                break;
 		default:
 			break;
 		}
 
 	}
+    private void DisplayWifiState(){
+        int rssi = 0;
+        String  ssid = "";
+
+        ConnectivityManager myConnManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo myNetworkInfo = myConnManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        WifiManager myWifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+        WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
+
+        if (myNetworkInfo.isConnected()){
+
+                // retrieve the ssid, rssi
+                ssid = myWifiInfo.getSSID();
+                rssi = myWifiInfo.getRssi();
+                long timestamp = System.currentTimeMillis();
+
+                RFData rfdata = new RFData(timestamp,ssid,rssi);
+               // add to array list for finger printing
+                  fingerprintingData.add(rfdata);
+
+                   Log.i("WIFI CONNECTION", "Wifi connection info: "+ "TimeStamp:"+ timestamp + " rssi: "+rssi +"ssid: "+ssid );
+                   //txtview.setText("TimeStamp:"+ timestamp + " rssi: "+rssi +"ssid: "+ssid);
+
+
+             }
+
+
+    }
     // This function checks the sample data against the test data.
     public void classifyData(ArrayList<AccelData> sampledata, ArrayList<AccelData> testdata)    {
 
