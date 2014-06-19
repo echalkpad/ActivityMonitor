@@ -2,9 +2,7 @@ package com.smartapps.accel;
 
 import java.util.Comparator;
 
-/**
- * Created by admin on 5/3/14.
- */
+
 public class Neighbour implements Comparable<Neighbour>{
     private AccelData neighbour;
     private double distance;

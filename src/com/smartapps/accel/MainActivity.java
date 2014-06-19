@@ -2,6 +2,7 @@ package com.smartapps.accel;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -9,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.widget.RadioButton;
@@ -46,7 +48,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 
 	private SensorManager sensorManager;
 	private Button btnStart, btnStop, btnTest, btnCheckWifi;
-    private TextView txtview;
+    private TextView txtview, txtviewwifi;
     private RadioButton radbtnWalking, radbtnIdle, radbtnRunning;
 	private boolean started = false;
     private boolean istesting = false;
@@ -66,6 +68,7 @@ public class MainActivity extends Activity implements SensorEventListener,
     private int nrOfTests;
     private Sensor accel;
     private int timeToSave;
+    private List<ScanResult> wifiList;
 
 
 	@Override
@@ -92,8 +95,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 		btnStart = (Button) findViewById(R.id.btnStart);
 		btnStop = (Button) findViewById(R.id.btnStop);
         btnTest = (Button) findViewById(R.id.btnTest);
-        btnCheckWifi = (Button) findViewById(R.id.btnCheckWifi);
-        txtview = (TextView) findViewById(R.id.txtview);
+
 
         radbtnIdle = (RadioButton) findViewById(R.id.radbotIdle);
         radbtnWalking =(RadioButton) findViewById(R.id.radbtnwalking);
@@ -102,15 +104,8 @@ public class MainActivity extends Activity implements SensorEventListener,
 		btnStart.setOnClickListener(this);
 		btnStop.setOnClickListener(this);
         btnTest.setOnClickListener(this);
-        btnCheckWifi.setOnClickListener(this);
 
-        this.registerReceiver(this.myWifiReceiver,
-                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
-        this.registerReceiver(this.myRssiChangeReceiver,
-                new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
-
-		btnStart.setEnabled(true);
+        btnStart.setEnabled(true);
 		btnStop.setEnabled(false);
 
         setTitle("Activity Monitoring");
@@ -118,30 +113,6 @@ public class MainActivity extends Activity implements SensorEventListener,
         timeToSave = 0;
 
 	}
-    private BroadcastReceiver myRssiChangeReceiver
-            = new BroadcastReceiver(){
-
-        @Override
-        public void onReceive(Context arg0, Intent arg1) {
-            // TODO Auto-generated method stub
-            int newRssi = arg1.getIntExtra(WifiManager.EXTRA_NEW_RSSI, 0);
-            txtview.setText(String.valueOf(newRssi));
-        }};
-
-    private BroadcastReceiver myWifiReceiver
-            = new BroadcastReceiver(){
-
-        @Override
-        public void onReceive(Context arg0, Intent arg1) {
-            // TODO Auto-generated method stub
-            ConnectivityManager myConnManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo = myConnManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-            if(networkInfo.getType() == ConnectivityManager.TYPE_WIFI){
-                DisplayWifiState();
-            }
-        }};
-
-
 
 
     public void switchContent(Fragment fragment)
@@ -238,7 +209,11 @@ public class MainActivity extends Activity implements SensorEventListener,
                 radbtnIdle.setChecked(false);
                 radbtnWalking.setChecked(false);
                 break;
+
+            default:
+                break;
         }
+
     }
 
 
@@ -325,72 +300,18 @@ public class MainActivity extends Activity implements SensorEventListener,
 
             }
             break;
-            case R.id.btnCheckWifi:
-                // check Wifi (RSSI) Received Signal Strength
 
-                break;
 		default:
 			break;
 		}
 
 	}
-    private void DisplayWifiState(){
-        int rssi = 0;
-        String  ssid = "";
 
-        ConnectivityManager myConnManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
-        NetworkInfo myNetworkInfo = myConnManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        WifiManager myWifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-        WifiInfo myWifiInfo = myWifiManager.getConnectionInfo();
-
-        if (myNetworkInfo.isConnected()){
-
-                // retrieve the ssid, rssi
-                ssid = myWifiInfo.getSSID();
-                rssi = myWifiInfo.getRssi();
-                long timestamp = System.currentTimeMillis();
-
-                RFData rfdata = new RFData(timestamp,ssid,rssi);
-               // add to array list for finger printing
-                  fingerprintingData.add(rfdata);
-
-                   Log.i("WIFI CONNECTION", "Wifi connection info: "+ "TimeStamp:"+ timestamp + " rssi: "+rssi +"ssid: "+ssid );
-                   //txtview.setText("TimeStamp:"+ timestamp + " rssi: "+rssi +"ssid: "+ssid);
-
-
-             }
-
-
-    }
     // This function checks the sample data against the test data.
     public void classifyData(ArrayList<AccelData> sampledata, ArrayList<AccelData> testdata)    {
 
 
-        /*
-        //DON'T FORGET TO TAKE THIS OUT!!!!!!!
 
-        testdata = new ArrayList<AccelData>();
-        testdata.add(new AccelData(System.currentTimeMillis(), new Point3d(1,1,1)));
-        testdata.add(new AccelData(System.currentTimeMillis(), new Point3d(2,1,1)));
-        testdata.add(new AccelData(System.currentTimeMillis(), new Point3d(1,2,1)));
-        testdata.add(new AccelData(System.currentTimeMillis(), new Point3d(1,1,2)));
-
-        sampledata = new ArrayList<AccelData>();
-        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(50,40,30), AccelData.State.Idle));
-        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(5,411,30), AccelData.State.Idle));
-        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(45,65,10), AccelData.State.Idle));
-        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(43,64,11), AccelData.State.Run));
-        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(20,21,23), AccelData.State.Run));
-        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(3.5,7.5,4.5), AccelData.State.Run));
-        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(2,11,31), AccelData.State.Run));
-        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(8,5,2), AccelData.State.Walk));
-        sampledata.add(new AccelData(System.currentTimeMillis(), new Point3d(10,20,20), AccelData.State.Walk));
-
-        this.testDataTemp = testdata;
-        this.trainingData = sampledata;
-        */
-
-        //Don't forget ! Take that thing out............. fake data...
 
         ArrayList<Neighbour> neighbours = new ArrayList<Neighbour>();
         for(int j = 0; j < testdata.size(); j++){

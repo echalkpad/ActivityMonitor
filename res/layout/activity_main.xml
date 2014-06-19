@@ -29,6 +29,7 @@
             android:id="@+id/radbtnwalking"
             android:layout_below="@+id/btnStop"
             android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
             android:layout_alignLeft="@+id/radbutrunning"/>
     <RadioButton
             android:layout_width="wrap_content"
@@ -87,18 +88,8 @@
             android:layout_marginTop="30dp"
             android:layout_below="@id/radbotIdle"
             android:layout_centerHorizontal="true"/>
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Check Wifi"
-            android:id="@+id/btnCheckWifi" android:layout_alignParentBottom="true" android:layout_alignLeft="@+id/btnStart"
-            android:layout_marginBottom="40dp"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Text"
-            android:id="@+id/txtview" android:layout_alignTop="@+id/btnCheckWifi"
-            android:layout_toRightOf="@+id/textView2" android:layout_alignBottom="@+id/btnCheckWifi"
-            android:layout_alignRight="@+id/btnStop" android:textSize="20dp"/>
+
+
+
 
 </RelativeLayout>

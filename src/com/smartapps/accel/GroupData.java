@@ -2,9 +2,7 @@ package com.smartapps.accel;
 
 import java.util.ArrayList;
 
-/**
- * Created by admin on 5/6/14.
- */
+
 public class GroupData {
 
     public static final int NR_INIT_QUANT = -1;
