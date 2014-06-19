@@ -58,7 +58,7 @@ public class MainActivity extends Activity implements SensorEventListener,
     private GroupData testDataWalk;
     private GroupData testDataRun;
 
-    private ArrayList<RFData> fingerprintingData;
+
 
    private final static String TAG_FRAGMENT = "TAG_FRAGMENT";
 
@@ -89,7 +89,7 @@ public class MainActivity extends Activity implements SensorEventListener,
         testDataIdle = new GroupData(new ArrayList<AccelData>());
         testDataWalk = new GroupData(new ArrayList<AccelData>());
         testDataRun = new GroupData(new ArrayList<AccelData>());
-        fingerprintingData = new ArrayList<RFData>();
+
 
 
 		btnStart = (Button) findViewById(R.id.btnStart);
