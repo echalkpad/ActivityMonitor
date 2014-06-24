@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import org.apache.commons.math3.distribution.NormalDistribution;
 
 import javax.vecmath.Point3d;
 
@@ -52,6 +53,7 @@ public class MainActivity extends Activity implements SensorEventListener,
     private RadioButton radbtnWalking, radbtnIdle, radbtnRunning;
 	private boolean started = false;
     private boolean istesting = false;
+    private ArrayList<AccelData> tempdata;
     private ArrayList<AccelData> trainingData;
     private ArrayList<AccelData> testDataTemp;
 	private GroupData testDataIdle;
@@ -84,7 +86,7 @@ public class MainActivity extends Activity implements SensorEventListener,
         nrOfTests = 0;
         istesting = false;
         accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
+        tempdata =  new ArrayList<AccelData>();
         trainingData = new ArrayList<AccelData>();
         testDataTemp = new ArrayList<AccelData>();
         testDataIdle = new GroupData(new ArrayList<AccelData>());
@@ -159,39 +161,66 @@ public class MainActivity extends Activity implements SensorEventListener,
 	*/
 	@Override
 	public void onSensorChanged(SensorEvent event) {
+
         if (started) {
 
-            double x = event.values[0];
-			double y = event.values[1];
-			double z = event.values[2];
-            Point3d acelPoint = new Point3d();
-            acelPoint.setX(x);
-            acelPoint.setY(y);
-            acelPoint.setZ(z);
+                double x = event.values[0];
+                double y = event.values[1];
+                double z = event.values[2];
+                Point3d acelPoint = new Point3d();
+                acelPoint.setX(x);
+                acelPoint.setY(y);
+                acelPoint.setZ(z);
 
-			long timestamp = System.currentTimeMillis();
             timeToSave++;
 
             if(!istesting){
                 if ((timeToSave % 2) == 0) {
 
-                    AccelData data = new AccelData(timestamp, acelPoint);
+                    AccelData data = new AccelData(acelPoint);
+
+                    this.tempdata.add(data);
+                    if(tempdata.size()>10)
+                    {
+                        Point3d pmean = Median(tempdata);
+                        Point3d ptd =stnDev(pmean,tempdata);
+                        System.out.println("Training Mean Point: " + pmean);
+                        System.out.println("Training STD Point: " + ptd);
+                        AccelData mdata = new AccelData(ptd);
+                        tempdata.clear();
+
                     if (radbtnIdle.isChecked()) {
-                        data.setPointState(AccelData.State.Idle);
+                        mdata.setPointState(AccelData.State.Idle);
                     }
                     if (radbtnWalking.isChecked()) {
-                        data.setPointState(AccelData.State.Walk);
+                        mdata.setPointState(AccelData.State.Walk);
                     }
                     if (radbtnRunning.isChecked()) {
-                        data.setPointState(AccelData.State.Run);
+                        mdata.setPointState(AccelData.State.Run);
                     }
-                    this.trainingData.add(data);
+                        this.trainingData.add(mdata);
+                    }
+
+
+
+
                 }
 		    }else {
 
-                if ((timeToSave % 8) == 0) {
-                    AccelData data = new AccelData(timestamp, acelPoint);
-                    this.testDataTemp.add(data);
+                if ((timeToSave % 2) == 0) {
+                    AccelData data = new AccelData(acelPoint);
+                    tempdata.add(data);
+                    if(tempdata.size()>10)
+                    {
+                        Point3d pmean = Median(tempdata);
+                        Point3d ptd =stnDev(pmean,tempdata);
+                        System.out.println("Testing Mean Point: " + pmean);
+                        System.out.println("Testing STD Point: " + ptd);
+                        AccelData mdata = new AccelData(ptd);
+                        tempdata.clear();
+                        this.testDataTemp.add(mdata);
+                    }
+
                 }
             }
 
@@ -230,8 +259,6 @@ public class MainActivity extends Activity implements SensorEventListener,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btnStart:
-
-
             if(this.radbtnIdle.isChecked()){
                 if(this.hasTrainingDataIdle == 1){
                     Toast.makeText(getApplicationContext(),MSG_ANOTHER_ACTION,Toast.LENGTH_SHORT).show();
@@ -316,6 +343,35 @@ public class MainActivity extends Activity implements SensorEventListener,
 		}
 
 	}
+
+    public Point3d stnDev(Point3d mean,ArrayList<AccelData> sampledata){
+        Point3d std = new Point3d();
+        Point3d vari;
+        double stdX =0.0;
+        double stdY =0.0;
+        double stdZ =0.0;
+        vari = variance(mean,sampledata);
+        for(int i=0; i<sampledata.size(); i++) {
+            stdX = Math.sqrt(vari.getX());
+            stdY = Math.sqrt(vari.getY());
+            stdZ = Math.sqrt(vari.getZ());
+        }
+        std.setX(stdX); std.setY(stdY); std.setZ(stdZ);
+        return std;
+    }
+    public Point3d variance(Point3d mean,ArrayList<AccelData> sampledata){
+        Point3d variance = new Point3d();
+        double meanSumX =0.0;
+        double meanSumY =0.0;
+        double meanSumZ =0.0;
+        for(int i=0; i<sampledata.size(); i++){
+            meanSumX += ((sampledata.get(i).getPoint3D().getX() - mean.getX()) * (sampledata.get(i).getPoint3D().getX()  - mean.getX()) ) ;
+            meanSumY += ((sampledata.get(i).getPoint3D().getX() - mean.getY()) * (sampledata.get(i).getPoint3D().getX()  - mean.getY()) ) ;
+            meanSumZ += ((sampledata.get(i).getPoint3D().getX() - mean.getZ()) * (sampledata.get(i).getPoint3D().getX()  - mean.getZ()) ) ;
+        }
+        variance.setX(meanSumX/sampledata.size()); variance.setY(meanSumY/sampledata.size()); variance.setZ(meanSumZ/sampledata.size());
+        return variance;
+    }
     public static Point3d Median(ArrayList<AccelData> sampledata)
     {
         Point3d mean = new Point3d();
@@ -333,6 +389,8 @@ public class MainActivity extends Activity implements SensorEventListener,
         }
         mean.setX(x/sampledata.size()); mean.setY(y/sampledata.size()); mean.setZ(z/sampledata.size());
         return mean;
+
+
     }
 
 
