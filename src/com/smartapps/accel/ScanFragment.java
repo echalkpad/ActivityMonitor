@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 
 /**
- * Created by Maryanne on 05-05-2014.
+ * 
  */
 public class ScanFragment   extends ListFragment {
 

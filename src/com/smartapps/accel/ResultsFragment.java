@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 
 /**
- * Created by Maryanne on 05-05-2014.
+ * Results Fragment
+ * Third page of the app
+ * Shows the Confusion Matrix (the results basead on the training and testing data)
  */
 public class ResultsFragment   extends ListFragment {
 
@@ -37,7 +39,7 @@ public class ResultsFragment   extends ListFragment {
 
     }
 
-
+    
     public void updateInformation(){
         DataItemAdapter adapter = new DataItemAdapter(getActivity());
         MainActivity activ = ((MainActivity) getActivity());
@@ -65,7 +67,7 @@ public class ResultsFragment   extends ListFragment {
 
 
     /* Class DataItem Adapter
-	 *
+	 * Here we say to the program what the list will contain
 	 */
     public class DataItemAdapter extends ArrayAdapter<DataItem> {
 

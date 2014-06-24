@@ -12,7 +12,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 /**
- *
+ * Second page of our app
+ * Allows the user to test the algorithm, doing a movement without saying to the app what movement is...
+ * then with the algorithm... the app will know which movement is (idle, walk or run)
  */
 public class TestFragment extends Fragment implements View.OnClickListener{
 
@@ -59,7 +61,11 @@ public class TestFragment extends Fragment implements View.OnClickListener{
     }
 
 
-
+    /**
+	* Here we say what the app needs to do when the user clicks in a button
+	* btnStart is the button to the start the test - the app will start collecting data
+	* btnStop is the button to stop the test - no more data to collect and then we classify the data
+	*/
     @Override
     public void onClick(View v) {
 

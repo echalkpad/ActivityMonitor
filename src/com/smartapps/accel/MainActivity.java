@@ -6,17 +6,10 @@ import java.util.List;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.BroadcastReceiver;
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.content.IntentFilter;
 
 
 import android.util.Log;
@@ -34,6 +27,13 @@ import android.widget.Button;
 import javax.vecmath.Point3d;
 
 
+/**
+ * Class Main
+ * Main Activity of our application
+ * Here the buttons are initialize for the first page,
+ * It is also done the switch between fragments,
+ * As well as the computation of the algorithm to calculate the number of Idles, Walking and Running
+ */
 public class MainActivity extends Activity implements SensorEventListener,
 		OnClickListener {
 
@@ -58,7 +58,7 @@ public class MainActivity extends Activity implements SensorEventListener,
     private GroupData testDataWalk;
     private GroupData testDataRun;
 
-
+    private ArrayList<RFData> fingerprintingData;
 
    private final static String TAG_FRAGMENT = "TAG_FRAGMENT";
 
@@ -69,6 +69,7 @@ public class MainActivity extends Activity implements SensorEventListener,
     private Sensor accel;
     private int timeToSave;
     private List<ScanResult> wifiList;
+
 
 
 	@Override
@@ -89,7 +90,7 @@ public class MainActivity extends Activity implements SensorEventListener,
         testDataIdle = new GroupData(new ArrayList<AccelData>());
         testDataWalk = new GroupData(new ArrayList<AccelData>());
         testDataRun = new GroupData(new ArrayList<AccelData>());
-
+        fingerprintingData = new ArrayList<RFData>();
 
 
 		btnStart = (Button) findViewById(R.id.btnStart);
@@ -114,7 +115,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 
 	}
 
-
+    /* Switch Fragments */
     public void switchContent(Fragment fragment)
     {
         if(fragment instanceof TestFragment){
@@ -151,7 +152,11 @@ public class MainActivity extends Activity implements SensorEventListener,
 	public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
 	}
-
+    /**
+	* Get Accelerometer data 
+	* if training then the data is to "teach" the model (we know if is idle, walk or run)
+	* if not, then we are testing... :)
+	*/
 	@Override
 	public void onSensorChanged(SensorEvent event) {
         if (started) {
@@ -163,6 +168,7 @@ public class MainActivity extends Activity implements SensorEventListener,
             acelPoint.setX(x);
             acelPoint.setY(y);
             acelPoint.setZ(z);
+
 			long timestamp = System.currentTimeMillis();
             timeToSave++;
 
@@ -188,6 +194,7 @@ public class MainActivity extends Activity implements SensorEventListener,
                     this.testDataTemp.add(data);
                 }
             }
+
        }
 	}
 
@@ -216,7 +223,9 @@ public class MainActivity extends Activity implements SensorEventListener,
 
     }
 
-
+	/**
+	* Say to the application what to do when the user clicks a specific button
+	*/
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -272,6 +281,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 
             //temporary value
             int tempNrActions = this.hasTrainingDataIdle + this.hasTrainingDataRun + this.hasTrainingDataWalk;
+			//ERROR MESSAGES
             if(started){
                 Toast.makeText(getApplicationContext(), MSG_FINISH_ACTION, Toast.LENGTH_LONG).show();
             }else if( tempNrActions == 0) {
@@ -306,12 +316,29 @@ public class MainActivity extends Activity implements SensorEventListener,
 		}
 
 	}
+    public static Point3d Median(ArrayList<AccelData> sampledata)
+    {
+        Point3d mean = new Point3d();
+        double x= 0.0;
+        double y= 0.0;
+        double z= 0.0;
+       //Collections.sort(sampledata);
+        for(int i =0; i<sampledata.size(); i++)
+        {
+
+              x += sampledata.get(i).getPoint3D().getX();
+              y += sampledata.get(i).getPoint3D().getY();
+              z += sampledata.get(i).getPoint3D().getZ();
+
+        }
+        mean.setX(x/sampledata.size()); mean.setY(y/sampledata.size()); mean.setZ(z/sampledata.size());
+        return mean;
+    }
+
 
     // This function checks the sample data against the test data.
+	/** The algorithm  :D */
     public void classifyData(ArrayList<AccelData> sampledata, ArrayList<AccelData> testdata)    {
-
-
-
 
         ArrayList<Neighbour> neighbours = new ArrayList<Neighbour>();
         for(int j = 0; j < testdata.size(); j++){
@@ -340,7 +367,7 @@ public class MainActivity extends Activity implements SensorEventListener,
                     default:
                         break;
                 }
-
+				//Sometimes it's nice to learn other languages.. like french XD
                 System.out.println("Le voisin " + t + " " + neighbours.get(t).getDistance());
             }
             AccelData.State st;

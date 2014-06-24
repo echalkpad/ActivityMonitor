@@ -54,14 +54,15 @@ public class AccelData {
         // this.neighbours = neighbours;
     }
 
+	/*********************************
+	       Getters and setters
+	*********************************/
 	public long getTimestamp() {
 		return timestamp;
 	}
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
 	}
-
-
 
     public State getPointState(){
         return this.pointState;
@@ -70,16 +71,18 @@ public class AccelData {
     public void setPointState(State newState){
         this.pointState = newState;
     }
-
-    public Point3d getPoint3D() {return point3d;}
-    // getters and setters
-    public void setNeighbours(ArrayList<Neighbour> neighbours) {
-        this.neighbours = neighbours;
-    }
+	
     public ArrayList<Neighbour> getNeighbours() {
         return neighbours;
     }
 
+    public Point3d getPoint3D() {
+		return point3d;
+	}
+   
+    public void setNeighbours(ArrayList<Neighbour> neighbours) {
+        this.neighbours = neighbours;
+    }
 	
 	public String toString()
 	{

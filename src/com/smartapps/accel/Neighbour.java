@@ -3,6 +3,11 @@ package com.smartapps.accel;
 import java.util.Comparator;
 
 
+/**
+ * Class Neighbour
+ * Each neighbour has its accel data and the distance 
+ * This class also helps to compare objects neighbour with each other (to sort them according to the distance)
+ */
 public class Neighbour implements Comparable<Neighbour>{
     private AccelData neighbour;
     private double distance;

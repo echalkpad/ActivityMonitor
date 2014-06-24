@@ -3,6 +3,11 @@ package com.smartapps.accel;
 import java.util.ArrayList;
 
 
+/**
+ * Class GroupData
+ * This class has the group of data obtain with the accelerometer
+ * Its also used to save the number of walks, idle and runs after the computation
+ */
 public class GroupData {
 
     public static final int NR_INIT_QUANT = -1;
