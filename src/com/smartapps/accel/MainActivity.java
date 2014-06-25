@@ -183,10 +183,10 @@ public class MainActivity extends Activity implements SensorEventListener,
                     if(tempdata.size()>10)
                     {
                         Point3d pmean = Median(tempdata);
-                        Point3d ptd =stnDev(pmean,tempdata);
+                        Point3d pstd =stnDev(pmean,tempdata);
                         System.out.println("Training Mean Point: " + pmean);
-                        System.out.println("Training STD Point: " + ptd);
-                        AccelData mdata = new AccelData(ptd);
+                        System.out.println("Training STD Point: " + pstd);
+                        AccelData mdata = new AccelData(pstd);
                         tempdata.clear();
 
                     if (radbtnIdle.isChecked()) {
@@ -213,10 +213,10 @@ public class MainActivity extends Activity implements SensorEventListener,
                     if(tempdata.size()>10)
                     {
                         Point3d pmean = Median(tempdata);
-                        Point3d ptd =stnDev(pmean,tempdata);
+                        Point3d pstd =stnDev(pmean,tempdata);
                         System.out.println("Testing Mean Point: " + pmean);
-                        System.out.println("Testing STD Point: " + ptd);
-                        AccelData mdata = new AccelData(ptd);
+                        System.out.println("Testing STD Point: " + pstd);
+                        AccelData mdata = new AccelData(pstd);
                         tempdata.clear();
                         this.testDataTemp.add(mdata);
                     }
@@ -351,11 +351,10 @@ public class MainActivity extends Activity implements SensorEventListener,
         double stdY =0.0;
         double stdZ =0.0;
         vari = variance(mean,sampledata);
-        for(int i=0; i<sampledata.size(); i++) {
             stdX = Math.sqrt(vari.getX());
             stdY = Math.sqrt(vari.getY());
             stdZ = Math.sqrt(vari.getZ());
-        }
+
         std.setX(stdX); std.setY(stdY); std.setZ(stdZ);
         return std;
     }
