@@ -50,7 +50,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 	private SensorManager sensorManager;
 	private Button btnStart, btnStop, btnTest, btnCheckWifi;
     private TextView txtview, txtviewwifi;
-    private RadioButton radbtnWalking, radbtnIdle, radbtnRunning;
+    private RadioButton radbtnWalking, radbtnIdle, radbtnRunning, radbtnOther;
 	private boolean started = false;
     private boolean istesting = false;
     private ArrayList<AccelData> tempdata;
@@ -59,6 +59,7 @@ public class MainActivity extends Activity implements SensorEventListener,
 	private GroupData testDataIdle;
     private GroupData testDataWalk;
     private GroupData testDataRun;
+    private GroupData testDataOther;
 
     private ArrayList<RFData> fingerprintingData;
 
@@ -67,10 +68,11 @@ public class MainActivity extends Activity implements SensorEventListener,
     private int hasTrainingDataIdle;
     private int hasTrainingDataWalk;
     private int hasTrainingDataRun;
+    private int hasTrainingDataOther;
     private int nrOfTests;
     private Sensor accel;
     private int timeToSave;
-    private List<ScanResult> wifiList;
+
 
 
 
@@ -83,6 +85,7 @@ public class MainActivity extends Activity implements SensorEventListener,
         hasTrainingDataIdle = 0;
         hasTrainingDataWalk = 0;
         hasTrainingDataRun = 0;
+        hasTrainingDataOther = 0;
         nrOfTests = 0;
         istesting = false;
         accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -92,6 +95,7 @@ public class MainActivity extends Activity implements SensorEventListener,
         testDataIdle = new GroupData(new ArrayList<AccelData>());
         testDataWalk = new GroupData(new ArrayList<AccelData>());
         testDataRun = new GroupData(new ArrayList<AccelData>());
+        testDataOther = new GroupData(new ArrayList<AccelData>());
         fingerprintingData = new ArrayList<RFData>();
 
 
@@ -103,6 +107,7 @@ public class MainActivity extends Activity implements SensorEventListener,
         radbtnIdle = (RadioButton) findViewById(R.id.radbotIdle);
         radbtnWalking =(RadioButton) findViewById(R.id.radbtnwalking);
         radbtnRunning = (RadioButton) findViewById(R.id.radbutrunning);
+        radbtnOther = (RadioButton) findViewById(R.id.radbtnother);
 
 		btnStart.setOnClickListener(this);
 		btnStop.setOnClickListener(this);
@@ -236,13 +241,21 @@ public class MainActivity extends Activity implements SensorEventListener,
             case R.id.radbotIdle:
                 radbtnWalking.setChecked(false);
                 radbtnRunning.setChecked(false);
+                radbtnOther.setChecked(false);
                 break;
             case R.id.radbtnwalking:
                 radbtnIdle.setChecked(false);
                 radbtnRunning.setChecked(false);
+                radbtnOther.setChecked(false);
                 break;
             case R.id.radbutrunning:
                 radbtnIdle.setChecked(false);
+                radbtnWalking.setChecked(false);
+                radbtnOther.setChecked(false);
+                break;
+            case R.id.radbtnother:
+                radbtnIdle.setChecked(false);
+                radbtnRunning.setChecked(false);
                 radbtnWalking.setChecked(false);
                 break;
 
@@ -286,6 +299,7 @@ public class MainActivity extends Activity implements SensorEventListener,
             radbtnRunning.setEnabled(false);
             radbtnWalking.setEnabled(false);
             radbtnIdle.setEnabled(false);
+            radbtnRunning.setChecked(false);
 
             // save prev data if available
             started = true;
@@ -303,6 +317,7 @@ public class MainActivity extends Activity implements SensorEventListener,
             radbtnRunning.setEnabled(true);
             radbtnWalking.setEnabled(true);
             radbtnIdle.setEnabled(true);
+            radbtnRunning.setChecked(true);
 			break;
         case R.id.btnTest:
 

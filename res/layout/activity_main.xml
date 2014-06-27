@@ -56,9 +56,7 @@
             android:layout_height="wrap_content"
             android:text="Test Data"
             android:id="@+id/btnTest"
-            android:layout_marginTop="15dp"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/textView2" />
+            android:layout_alignParentBottom="true" android:layout_alignRight="@+id/radbtnwalking"/>
     <Button
         android:id="@+id/btnStart"
         android:layout_width="140dp"
@@ -85,11 +83,13 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Testing"
             android:id="@+id/textView2"
-            android:layout_marginTop="30dp"
-            android:layout_below="@id/radbotIdle"
-            android:layout_centerHorizontal="true"/>
-
-
+            android:layout_above="@+id/btnTest" android:layout_alignLeft="@+id/radbotIdle"/>
+    <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Other"
+            android:id="@+id/radbtnother" android:layout_centerVertical="true"
+            android:layout_alignLeft="@+id/radbutrunning"/>
 
 
 </RelativeLayout>
