@@ -13,7 +13,7 @@ import android.widget.TextView;
 /**
  * Results Fragment
  * Third page of the app
- * Shows the Confusion Matrix (the results based on the training and testing data)
+ * Shows the Confusion Matrix (the results basead on the training and testing data)
  */
 public class ResultsFragment   extends ListFragment {
 

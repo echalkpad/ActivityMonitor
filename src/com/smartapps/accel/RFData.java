@@ -3,12 +3,8 @@ package com.smartapps.accel;
 import javax.vecmath.Point3d;
 
 /**
-<<<<<<< HEAD
  * Class RFData
  * It has the basic information (timestamp, ssid and rssi)
-=======
- * Created by admin on 5/10/14.
->>>>>>> parent of 43747d2... removed RFDATA
  */
 public class RFData {
 

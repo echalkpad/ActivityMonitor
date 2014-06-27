@@ -16,7 +16,7 @@ public class AccelData {
     }
 
     private State pointState;
-
+	private long timestamp;
 	//private double x;
 	//private double y;
 	//private double z;
@@ -26,11 +26,11 @@ public class AccelData {
 
     /**
      * Construct of Accel Data without knowing the state of the new point
-
+     * @param timestamp
      * @param point3d - coordinates of the point
      */
-    public AccelData(Point3d point3d) {
-
+    public AccelData(long timestamp, Point3d point3d) {
+        this.timestamp = timestamp;
         //this.x = x;
         //this.y = y;
         //this.z = z;
@@ -40,12 +40,12 @@ public class AccelData {
 
     /**
      * Construct of AccelData with the state of the new point
-
+     * @param timestamp
      * @param point3d - - coordinates of the point
      * @param pointState - state of the point (Idle, Walk or Run)
      */
-    public AccelData(Point3d point3d, State pointState) {
-
+    public AccelData(long timestamp, Point3d point3d, State pointState) {
+        this.timestamp = timestamp;
         //this.x = x;
         //this.y = y;
         //this.z = z;
@@ -57,7 +57,12 @@ public class AccelData {
 	/*********************************
 	       Getters and setters
 	*********************************/
-
+	public long getTimestamp() {
+		return timestamp;
+	}
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
 
     public State getPointState(){
         return this.pointState;
@@ -81,7 +86,7 @@ public class AccelData {
 	
 	public String toString()
 	{
-		return "x="+point3d.getX()+", y="+point3d.getY()+", z="+point3d.getZ() + " State is " + this.pointState.name();
+		return "t="+timestamp+", x="+point3d.getX()+", y="+point3d.getY()+", z="+point3d.getZ() + " State is " + this.pointState.name();
 	}
 	
 
