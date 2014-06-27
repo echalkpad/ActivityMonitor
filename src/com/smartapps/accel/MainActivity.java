@@ -95,7 +95,10 @@ public class MainActivity extends Activity implements SensorEventListener,
         testDataIdle = new GroupData(new ArrayList<AccelData>());
         testDataWalk = new GroupData(new ArrayList<AccelData>());
         testDataRun = new GroupData(new ArrayList<AccelData>());
+<<<<<<< HEAD
         testDataOther = new GroupData(new ArrayList<AccelData>());
+=======
+>>>>>>> parent of 43747d2... removed RFDATA
         fingerprintingData = new ArrayList<RFData>();
 
 
